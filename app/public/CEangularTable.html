@@ -27,7 +27,7 @@
 	<style type="text/css">
 
 	td{padding:5px;}
-	.overFlowRight{
+	table{
 		overflow:scroll;
 	}
 	.smallBox{
@@ -40,6 +40,10 @@
 	.removalButtons{
 		margin:3px;
 	}
+	.glyphicon-remove{
+		color:red;
+		cursor:pointer;
+	}
 	</style>
 
 
@@ -50,10 +54,10 @@
 	<div class="container-fluid">
 
 		<div class="row">
+
 			<button class="btn" ng-click="showMe(started)" ng-class="{'btn-primary': started, 'btn-danger': !started}">click</button>
 
-
-			<input ng-model="searchKeyWord"></input>
+			<input ng-model="searchKeyWord" placeholder="Search Table..."></input>
 			
 			<button class="removalButtons btn btn-warning" ng-repeat="x in removedColumns" ng-click="returnColumnView(x)">{{x}}</button>
 
@@ -62,41 +66,82 @@
 		<div class="row">
 			
 			<table class="table table-inverse">
-				<tr>
-					<td ng-repeat="(key, val) in dummyData[0]" class="{{key}}">
-						<button class="btn" ng-click="changeSortType(key)">{{key}}</button>
-						<button class="btn btn-danger" ng-click="removeColumnView(key)">X</button>
-					</td>
 
-				</tr>
+				<thead>
+					<tr>
+						<td ng-repeat="(key, val) in sampleData" class="{{key}}">
+						<div class="btn-group" role="group" aria-label="...">
+							<button class="btn" ng-click="changeSortType(key)">{{key}}</button>
+							<button class="btn btn-danger" ng-click="removeColumnView(key)">X</button>
+						</div>
+						</td>
 
-				<tr ng-repeat="x in dummyData | filter:searchKeyWord | orderBy:sortType:sortReverse">
-	<!-- 					
-					<td ng-repeat="(key,val) in x">
+					</tr>
+				</thead>
 
-						<span>{{val}}</span>
+				<tbody>
+					<tr ng-repeat="x in dummyData | filter:searchKeyWord | orderBy:sortType:sortReverse">
+		<!-- 					
+						<td ng-repeat="(key,val) in x">
 
-					</td> -->
+							<span>{{val}}</span>
 
-					<td class="Publisher">{{x.Publisher}}</td>
+						</td> -->
+
+						<td class="Publisher">{{x.Publisher}}</td>
+						
+						<td class="Games">
+							<h5 ng-repeat="y in x.Games">{{y}}</h5>
+						</td>
+
+						<td class="DateCreated">{{x.DateCreated}}</td>
+						<td class="AcceptingSubmissions">{{x.AcceptingSubmissions}}</td>
+						<td class="Dummy">{{x.Dummy}}</td>
+						<td class="pic"><img class="smallBox" src="{{x.pic}}"></td>
+						<td class="a">{{x.a}}</td>
+						<td class="b">{{x.b}}</td>
+						<td class="c">{{x.c}}</td>
+						<td class="d">{{x.d}}</td>
+						<td class="e">{{x.e}}</td>
+						<td class="f">{{x.f}}</td>
+						<td class="g">{{x.g}}</td>
+
 					
-					<td class="Games">
-						<h5 ng-repeat="y in x.Games">{{y}}</h5>
-					</td>
-
-					<td class="DateCreated">{{x.DateCreated}}</td>
-					<td class="AcceptingSubmissions">{{x.AcceptingSubmissions}}</td>
-					<td class="Dummy">{{x.Dummy}}</td>
-					<td class="pic"><img class="smallBox" src="{{x.pic}}"></td>
-
-				
-				</tr>
+					</tr>
+				</tbody>
 			</table>
 
 		</div>
 	
 	</div>
 
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+
+				<div class="modal-header">
+
+				</div>
+
+				<div class="modal-body">
+
+				</div>
+
+				<div class="modal-footer">
+
+					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Exit</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
 
 
 	<!-- {console.log($scope.bookmarks)} -->
@@ -108,18 +153,54 @@
 
 		//list of columns temporarily removed
 		$scope.removedColumns = [];
+		$scope.removedObjectContents = {};
+
+		//this removes the key from all objects and puts them into a temporary removedObjectContents array
+		function removeKey(keyname){
+			//make an array with that keyname
+			$scope.removedObjectContents[keyname] = [];
+			//iterate over the data
+			for(x=0;x<$scope.dummyData.length;x++){
+				//take the xth data keyname value and push into the temp array
+				$scope.removedObjectContents[keyname].push($scope.dummyData[x][keyname]);
+				//remove that item from the object
+				delete $scope.dummyData[x][keyname];
+			}
+			// console.log($scope.removedObjectContents);
+			// console.log($scope.dummyData);
+		}
+
+		//this returns all contents from the removedObjectsContetns array to their respective objects
+		function addKey(keyname){
+
+			//iterate over all dummy data
+			for(x=0;x<$scope.dummyData.length;x++){
+				// console.log($scope.removedObjectContents[keyname][x]);
+
+				//return to dummydaya 0, that keyname, the value that was stored under that keyname
+				$scope.dummyData[x][keyname] = $scope.removedObjectContents[keyname][x];
+			}
+			//remove the temporary object key
+			delete $scope.removedObjectContents[keyname];
+			// console.log($scope.removedObjectContents);
+			// console.log($scope.dummyData);
+		}
 
 		//makes things hidden
 		function removeColumnView(x){
 			$('.' + x).addClass("hidden");
 			$scope.removedColumns.push(x);
+			removeKey(x);
 		}
+
 		//reveals hidden things
 		function returnColumnView(x){
 			$scope.removedColumns.splice($scope.removedColumns.indexOf(x), 1);
 			$('.' + x).removeClass("hidden");
 			console.log($scope.removedColumns);
+			addKey(x);
 		}
+
 		$scope.returnColumnView = returnColumnView;
 		$scope.removeColumnView = removeColumnView;
 
@@ -151,15 +232,34 @@
 		$scope.sortReverse = false;
 
 
+		//very important search var
+		$scope.searchKeyWord = "";
 		$scope.sortOrder = null;
 		$scope.filterType = null;
 
-		$scope.sortByThis = null;
+		// $scope.sortByThis = null;
 
+		//needed for modal toggle?
 		$scope.started = true;
 
 
 		$scope.inputfield = "";
+
+		$scope.sampleData = {
+				Publisher: "", 
+				Games: [], 
+				DateCreated: "",
+				AcceptingSubmissions: null,
+				Dummy: '',
+				pic: "",
+				"a":0,
+				"b":1,
+				"c":2,
+				"d":3,
+				"e":4,
+				"f":5,
+				"g":6
+		}
 
 		//dummy data
 		$scope.dummyData = [
@@ -169,7 +269,14 @@
 				DateCreated: "2011",
 				AcceptingSubmissions: true,
 				Dummy: '0',
-				pic: "https://i.imgur.com/vYMdCnD.jpg"
+				pic: "https://i.imgur.com/vYMdCnD.jpg",
+				"a":0,
+				"b":1,
+				"c":2,
+				"d":3,
+				"e":4,
+				"f":5,
+				"g":6
 
 			},
 				{
@@ -177,39 +284,54 @@
 				Games: ["Bob", "Bill", "Bill2"], 
 				DateCreated: "2012",
 				AcceptingSubmissions: true,
-				pic:"https://i.imgur.com/bQDtnrx.jpg"
+				pic:"https://i.imgur.com/bQDtnrx.jpg",
+				"a":0,
+				"b":1,
+				"c":2,
+				"d":3,
+				"e":4,
+				"f":5,
+				"g":6
 			},
 			{
 				Publisher: "Zitnis", 
 				Games: ["BH", "CP", "HUTS"], 
 				DateCreated: "2012",
 				AcceptingSubmissions: false,
-				pic: "https://i.imgur.com/bQDtnrx.jpg"
+				pic: "https://i.imgur.com/bQDtnrx.jpg",
+				"a":0,
+				"b":1,
+				"c":2,
+				"d":3,
+				"e":4,
+				"f":5,
+				"g":6
 			},
 			{
 				Publisher: "Doug", 
 				Games: ["DDG", "UNPUB"], 
 				DateCreated: "1980",
 				AcceptingSubmissions: true,
-				pic:"https://i.imgur.com/bQDtnrx.jpg"
+				pic:"https://i.imgur.com/bQDtnrx.jpg",
+				"a":"0",
+				"b":"1",
+				"c":"2",
+				"d":"3",
+				"e":"4",
+				"f":"5",
+				"g":"6"
 			}
-		]
+		];
+
+		$scope.selectedDummyData = {};
 	
-		$scope.searchKeyWord = "";
-
-		function fullSearch(x){
-			$scope.dummyData.foreach(function(x){
-
-				if(typeof x == array || typeof x == object){
-					console.log("going deeper");
-					fullSearch(x);
-				}else{
-					console.log(x);
-				}
-			});
-		}
 
 
+
+
+
+
+		//modal functions
 
 		function toggle(x){
 			if($scope.started == true){
