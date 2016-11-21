@@ -55,6 +55,8 @@
 
 		<div class="row">
 
+			<button ng-click="" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button>
+
 			<button class="btn" ng-click="showMe(started)" ng-class="{'btn-primary': started, 'btn-danger': !started}">click</button>
 
 			<input ng-model="searchKeyWord" placeholder="Search Table..."></input>
@@ -80,7 +82,7 @@
 				</thead>
 
 				<tbody>
-					<tr ng-repeat="x in dummyData | filter:searchKeyWord | orderBy:sortType:sortReverse">
+					<tr ng-repeat="x in dummyData | filter:searchKeyWord | orderBy:sortType:sortReverse" ng-click="assignSelectedDummyData(dummyData.indexOf(x))" data-toggle="modal" data-target="#myModal">
 		<!-- 					
 						<td ng-repeat="(key,val) in x">
 
@@ -124,11 +126,13 @@
 			<div class="modal-content">
 
 				<div class="modal-header">
-
+					{{selectedDummyData.Publisher}}
 				</div>
 
 				<div class="modal-body">
-
+					<ul ng-repeat="(key, value) in selectedDummyData">
+						<p><strong>{{key}}: </strong><span>{{value}}</span></p>
+					</ul>
 				</div>
 
 				<div class="modal-footer">
@@ -323,15 +327,22 @@
 			}
 		];
 
+		$scope.MasterData = _.cloneDeep($scope.dummyData);
+		console.log($scope.MasterData);
+		//modal array and helper
+
 		$scope.selectedDummyData = {};
 	
+		$scope.assignSelectedDummyData = function(x){
+			$scope.selectedDummyData = $scope.MasterData[x];
+			console.log($scope.selectedDummyData);
+
+		}
 
 
 
 
-
-
-		//modal functions
+		// click button functions
 
 		function toggle(x){
 			if($scope.started == true){
