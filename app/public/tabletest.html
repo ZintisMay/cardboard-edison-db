@@ -54,6 +54,7 @@
 
 
 			<input ng-model="searchKeyWord"></input>
+			<h3>{{searchKeyWord}}</h3>
 			
 			<button class="removalButtons btn btn-warning" ng-repeat="x in removedColumns" ng-click="returnColumnView(x)">{{x}}</button>
 
@@ -70,25 +71,9 @@
 
 				</tr>
 
-				<tr ng-repeat="x in dummyData | filter:searchKeyWord | orderBy:sortType:sortReverse">
-	<!-- 					
-					<td ng-repeat="(key,val) in x">
+				<tr ng-repeat="x in testArray | filter:searchKeyWord">
 
-						<span>{{val}}</span>
-
-					</td> -->
-
-					<td class="Publisher">{{x.Publisher}}</td>
-					
-					<td class="Games">
-						<h5 ng-repeat="y in x.Games">{{y}}</h5>
-					</td>
-
-					<td class="DateCreated">{{x.DateCreated}}</td>
-					<td class="AcceptingSubmissions">{{x.AcceptingSubmissions}}</td>
-					<td class="Dummy">{{x.Dummy}}</td>
-					<td class="pic"><img class="smallBox" src="{{x.pic}}"></td>
-
+				<td>{{x}}</td>
 				
 				</tr>
 			</table>
@@ -160,6 +145,8 @@
 
 
 		$scope.inputfield = "";
+
+		$scope.testArray = ['ab', 'ac', 'b', 'd', 'e', 'f', 'gd'];
 
 		//dummy data
 		$scope.dummyData = [
