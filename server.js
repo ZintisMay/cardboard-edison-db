@@ -27,10 +27,13 @@ app.use(bodyParser.json({type:'application/vnd.api+json'}));
 // Routes
 // =============================================================
 
-// require("./app/routes/api-routes.js")(app)
+require("./app/routes/api-routes.js")(app)
 require("./app/routes/html-routes.js")(app)
 
 
+// var JSONdata = require("./DATA.json");
+
+// console.log(JSONdata);
 
 
 // Starts the server to begin listening 
