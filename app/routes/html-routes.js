@@ -20,8 +20,24 @@ module.exports = function(app){
 		res.sendFile(path.join(__dirname + '/../public/CEangularTable.html'));
 	});
 
+	app.get('/jsontest', function(req, res){
+		res.sendFile(path.join(__dirname + '/../public/jsontest.html'));
+	});
+
 	app.get('/CEangularNewCompany', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/CEangularNewCompany.html'));
+	});
+
+	app.get('/Table', function(req, res){
+		res.sendFile(path.join(__dirname + '/../public/Table.html'));
+	});
+
+	app.get('/Table2', function(req, res){
+		res.sendFile(path.join(__dirname + '/../public/Table2.html'));
+	});
+
+	app.get('/Table3', function(req, res){
+		res.sendFile(path.join(__dirname + '/../public/Table3.html'));
 	});
 
 }

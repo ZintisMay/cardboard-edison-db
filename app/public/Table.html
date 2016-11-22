@@ -40,15 +40,32 @@
 	.hidden{
 		display:hidden;
 	}
+
 	.removalButtons{
 		margin:3px;
 	}
+
 	.glyphicon-remove{
 		color:red;
 		cursor:pointer;
 	}
+
 	.titleButtons{
 		font-size:10px;
+
+		margin:0px;
+	}
+
+	.thickButton{
+		padding-top: 3px;
+		padding-bottom: 3px;
+
+	}
+
+	.thinButton{
+		padding-top: 0px;
+		padding-bottom: 0px;
+
 	}
 	</style>
 
@@ -80,60 +97,54 @@
 				<thead>
 					<tr>
 						<td ng-repeat="(key, val) in sampleData" class="{{key}}">
-						<div class="btn-group" role="group" aria-label="...">
-							<button class="btn titleButtons" ng-click="changeSortType(key)">{{key}}</button>
-							<button class="btn btn-danger titleButtons" ng-click="removeColumnView(key)">X</button>
-						</div>
+
+							<!-- <div class="btn-group" role="group" aria-label="..."> -->
+
+								<button class="btn titleButtons thickButton btn-block" ng-click="changeSortType(key)">{{key}}</button>
+
+								<button class="btn btn-danger titleButtons thinButton btn-block" ng-click="removeColumnView(key)">X</button>
+
+<!-- 							</div> -->
+
 						</td>
 
 					</tr>
 				</thead>
 
 				<tbody>
-					<tr ng-repeat="x in sampleDataArray | filter:searchKeyWord | orderBy:sortType:sortReverse" ng-click="assignSelectedDummyData(sampleDataArray.indexOf(x))" data-toggle="modal" data-target="#myModal">
-		<!-- 					
-						<td ng-repeat="(key,val) in x">
 
-							<span>{{val}}</span>
-
-						</td> -->
+					<tr ng-repeat="x in CEdataArray | filter:searchKeyWord | orderBy:sortType:sortReverse" ng-click="assignSelectedDummyData(CEdataArray.indexOf(x))" data-toggle="modal" data-target="#myModal">
 
 						<td class="Publisher_Name">{{x.Publisher_Name}}</td>
 
-						<td class="Publisher_Website">{{x.Publisher_Website}}</td>
-						
-						<td class="Representative_Games">{{Representative_Games}}</td>
+						<td class="Accepting_Submissions">{{x.Accepting_Submissions}}</td>
 
-						<td class="Categories_of_Interest">
-							<h5 ng-repeat="y in x.Categories_of_Interest">{{y}}</h5>
-						</td>
+						<td class="Catalog_Size">{{x.Catalog_Size}}</td>
+						
+						<td class="Representative_Games">{{x.Representative_Games}}</td>
+
+						<td class="Interested_In">{{x.Interested_In}}</td>
+
+						<td class="Categories_of_Interest">{{x.Categories_of_Interest}}</td>
+
+						<td class="Country">{{x.Country}}</td>
 
 						<td class="Method_of_Contact">
 							<h5 ng-repeat="y in x.Method_of_Contact">{{y}}</h5>
 						</td>
 
-						<td class="Catalog_Size">{{x.Catalog_Size}}</td>
-
-						<td class="Accepting_Submissions">{{x.Accepting_Submissions}}</td>
-
-						<td class="Country">{{x.Country}}</td>
-
-						<td class="pic"><img class="smallBox" src="{{x.pic}}"></td>
+						<td class="Publisher_Website">{{x.Publisher_Website}}</td>
 
 						<td class="BoardGameGeek_Page">{{x.BoardGameGeek_Page}}</td>
 
 						<td class="Contact_Info">{{x.Contact_Info}}</td>
 
-						<td class="Interested_In">{{x.Interested_In}}</td>
-
 						<td class="Planned_Use_of_Kickstarter">{{x.Planned_Use_of_Kickstarter}}</td>
-
-						<td class="Representative_Games">{{x.Representative_Games}}</td>
 
 						<td class="Profile_Updated_On">{{x.Profile_Updated_On}}</td>
 
-					
 					</tr>
+
 				</tbody>
 			</table>
 
@@ -149,14 +160,42 @@
 			<!-- Modal content-->
 			<div class="modal-content">
 
-				<div class="modal-header">
+<!-- 				<div class="modal-header">
 					{{selectedDummyData.Publisher}}
-				</div>
+				</div> -->
 
 				<div class="modal-body">
-					<ul ng-repeat="(key, value) in selectedDummyData">
+					<ul ng-repeat="(key, value) in selectedDummyData ">
 						<p><strong>{{key}}: </strong><span>{{value}}</span></p>
 					</ul>
+
+						<p><strong>{{x.Publisher_Name}}</td>
+
+						<p><strong>{{x.Accepting_Submissions}}</td>
+
+						<p><strong>{{x.Catalog_Size}}</td>
+						
+						<p><strong>{{x.Representative_Games}}</td>
+
+						<p><strong>{{x.Interested_In}}</td>
+
+						<p><strong>{{x.Categories_of_Interest}}</td>
+
+						<td class="Country">{{x.Country}}</td>
+
+						<td class="Method_of_Contact">
+							<h5 ng-repeat="y in x.Method_of_Contact">{{y}}</h5>
+						</td>
+
+						<td class="Publisher_Website">{{x.Publisher_Website}}</td>
+
+						<td class="BoardGameGeek_Page">{{x.BoardGameGeek_Page}}</td>
+
+						<td class="Contact_Info">{{x.Contact_Info}}</td>
+
+						<td class="Planned_Use_of_Kickstarter">{{x.Planned_Use_of_Kickstarter}}</td>
+
+						<td class="Profile_Updated_On">{{x.Profile_Updated_On}}</td>
 				</div>
 
 				<div class="modal-footer">
@@ -172,43 +211,61 @@
 	</div>
 
 
-	<!-- {console.log($scope.bookmarks)} -->
-
-
-
 	<script type="text/javascript">
 		
 	//initializes the module, and then controller
-	angular.module('CETABLE', []).controller("MainCTRL", function($scope){
+	angular.module('CETABLE', []).controller("MainCTRL", function($scope, $http){
 
 /////////////////////////////////////////////////////////////////////////////////////
-		var CEDATA = {};
+		// var CEDATA = {};
 
-		function getJSON(){
-			$.ajax({
-				url: "/api/data",
-				success: function(result){
-					// console.log(result);
-					CEDATA = result;
-					console.log(CEDATA);
-				}
-			});
-		}
+		// function getJSON(){
+		// 	$.ajax({
+		// 		url: "/api/data",
+		// 		success: function(result){
+		// 			// console.log(result);
+		// 			CEDATA = result;
+		// 			console.log(CEDATA);
+		// 		}
+		// 	});
+		// }
 
-		$scope.getJSON = getJSON;
-		$scope.CEJSON = CEDATA;
+		// $scope.getJSON = getJSON;
 
-		$.ajax({
-			url: "/api/data",
-			success: function(result){
-				// console.log(result);
-				CEDATA = result;
-				console.log(CEDATA);
-			}
-		});
-
-		$scope.getJSON = getJSON;
 		// $scope.CEJSON = CEDATA;
+
+		$scope.CEdataArray = [];
+
+		// var temp = [];
+
+		// $.ajax({
+		// 	url: "/api/data",
+		// 	success: function(result){
+		// 		// console.log(result);
+		// 		$scope.CEdataArray = result.Publisher_Data_Input_Form;
+		// 		temp = result.Publisher_Data_Input_Form;
+		// 		console.log($scope.CEdataArray);
+		// 		console.log(result.Publisher_Data_Input_Form);
+		// 	}
+		// }).done(function(){
+		// 	console.log("done");
+		// 	$scope.CEdataArray = temp;
+		// });
+
+	    $http.get("/api/data").then(function(response) {
+
+			response.data.Publisher_Data_Input_Form.forEach(function(x){
+				 console.log(typeof x.Categories_of_Interest);
+				 console.log(typeof x.Representative_Games);
+			});
+
+			$scope.CEdataArray = response.data.Publisher_Data_Input_Form;
+			console.log($scope.CEdataArray);
+			$scope.MasterData = response.data.Publisher_Data_Input_Form;
+	    });
+
+//////////////////////////////////////////////////////////////////////////////////
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -310,22 +367,38 @@
 
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		$scope.sampleData = {
+
 				Publisher_Name: "Zin", 
+
 				Accepting_Submissions: "Yes", 
-				BoardGameGeek_Page: "http://www.bob.com",
+
 				Catalog_Size: 1,
-				Categories_of_Interest: ["Dice", "Card"],
-				Contact_Info: "zintis@zintis.com",
-				Country:"USA",
+
+				Representative_Games: "Huts, WGAL",
+
 				Interested_In:"Games",
+
+				Categories_of_Interest: ["Dice", "Card"],
+
+				Country:"USA",
+
 				Method_of_Contact:["Phone","Email"],
+
+				Publisher_Website:"zintis.com",
+
+				BoardGameGeek_Page: "http://www.bob.com",
+
+				Contact_Info: "zintis@zintis.com",
+
 				Planned_Use_of_Kickstarter:"Often",
-				Representative_Games: "Viewpoint\nViewpoint Reflections\nMonster Town\nNo Fish!",
-				Publisher_Website:5,
+
 				Profile_Updated_On:6
+
 		}
 		$scope.sampleDataArray = [];
 		$scope.sampleDataArray[0] = $scope.sampleData;
+
+		console.log('sampleDataArray', $scope.sampleDataArray[0]);
 
 		// $scope.sampleData = CEDATA.Publisher_Data_Input_Form[0];
 
