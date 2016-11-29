@@ -130,7 +130,6 @@ module.exports = function(app){
 		// res.json(showAll('gsw3abjc36mo6i91','PublisherDirectory'));
 		var res2 = res;
 
-
 		console.log(("SELECT * FROM " + a + (b?".":"") + b));
 
 		var temp= [];
@@ -139,7 +138,7 @@ module.exports = function(app){
 			if(err) throw err;
 
 			for(z=0;z<res.length;z++){
-				delete res.PubPassword;
+				delete res[z].PubPassword;
 				console.log(res[z]);
 				temp.push(res[z]);	
 			}
