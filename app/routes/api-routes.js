@@ -109,6 +109,8 @@ module.exports = function(app){
 
 	// If a user sends data to add a new character...
 	app.post('/api/newEntry', function(req, res){
+
+
 		console.log(req.body);
 		console.log('newEntry');
 		pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
@@ -142,4 +144,16 @@ module.exports = function(app){
 			res2.json(temp);
 		});
 	});
+
+	app.post('/api/populateDB', function(req, res){
+		console.log('populateDB');
+
+		// console.log("req", req);
+		console.log("req.body", req.body);
+		// pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
+		res.json({"You":"Did it!"});
+
+	});
+
+
 }
