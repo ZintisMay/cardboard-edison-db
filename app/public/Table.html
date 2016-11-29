@@ -85,6 +85,10 @@
 			<button ng-click="getJSON()" class="btn btn-primary">JSON</button>
 
 			<input ng-model="searchKeyWord" placeholder="Search Table..."></input>
+
+			<input ng-model="searchKeyWord2" placeholder="Search Table..."></input>
+
+			<input ng-model="searchKeyWord3" placeholder="Search Table..."></input>
 			
 			<button class="removalButtons btn btn-warning" ng-repeat="x in removedColumns" ng-click="returnColumnView(x)">{{x}}</button>
 
@@ -113,7 +117,7 @@
 
 				<tbody>
 
-					<tr ng-repeat="x in CEdataArray | filter:searchKeyWord | orderBy:sortType:sortReverse" ng-click="assignSelectedDummyData(CEdataArray.indexOf(x))" data-toggle="modal" data-target="#myModal">
+					<tr ng-repeat="x in CEdataArray | filter:searchKeyWord| filter:searchKeyWord2 | filter:searchKeyWord3  | orderBy:sortType:sortReverse" ng-click="assignSelectedDummyData(CEdataArray.indexOf(x))" data-toggle="modal" data-target="#myModal">
 
 						<td class="Publisher_Name">{{x.Publisher_Name}}</td>
 
@@ -121,11 +125,21 @@
 
 						<td class="Catalog_Size">{{x.Catalog_Size}}</td>
 						
-						<td class="Representative_Games">{{x.Representative_Games}}</td>
+						<td class="Representative_Games">
+							<ul>
+								<li ng-repeat="y in x.Representative_Games">{{y}}</li>
+							</ul>
+						</td>
 
 						<td class="Interested_In">{{x.Interested_In}}</td>
 
-						<td class="Categories_of_Interest">{{x.Categories_of_Interest}}</td>
+						<td class="Categories_of_Interest">
+
+							<ul>
+								<li ng-repeat="y in x.Categories_of_Interest">{{y}}</li>
+							</ul>
+
+						</td>
 
 						<td class="Country">{{x.Country}}</td>
 
@@ -165,38 +179,26 @@
 				</div> -->
 
 				<div class="modal-body">
-					<ul ng-repeat="(key, value) in selectedDummyData ">
+<!-- 					<ul ng-repeat="x in selectedDummyData ">
 						<p><strong>{{key}}: </strong><span>{{value}}</span></p>
-					</ul>
+					</ul> -->
 
-						<p><strong>{{x.Publisher_Name}}</td>
-
-						<p><strong>{{x.Accepting_Submissions}}</td>
-
-						<p><strong>{{x.Catalog_Size}}</td>
+						<p><strong></strong>{{selectedDummyData.Publisher_Name}}</p>
+						<p><strong>Accepting_Submissions: </strong>{{selectedDummyData.Accepting_Submissions}}</p>
+						<p><strong>Catalog_Size: </strong>{{selectedDummyData.Catalog_Size}}</p>
+						<p><strong>Representative_Games: </strong>{{selectedDummyData.Representative_Games}}</p>
+						<p><strong>Interested_In: </strong>{{selectedDummyData.Interested_In}}</p>
+						<p><strong>Categories_of_Interest: </strong>{{selectedDummyData.Categories_of_Interest}}</p>
+						<p><strong>Country: </strong>{{selectedDummyData.Country}}</p>
 						
-						<p><strong>{{x.Representative_Games}}</td>
+						<p><strong>Method_of_Contact: </strong>{{selectedDummyData.Method_of_Contact}}</p>
 
-						<p><strong>{{x.Interested_In}}</td>
+						<p><strong>Publisher_Website: </strong></p>{{selectedDummyData.Publisher_Website}}
+						<p><strong>BoardGameGeek_Page: </strong>{{selectedDummyData.BoardGameGeek_Page}}</p>
+						<p><strong>Contact_Info: </strong>{{selectedDummyData.Contact_Info}}</p>
+						<p><strong>Planned_Use_of_Kickstarter: </strong>{{selectedDummyData.Planned_Use_of_Kickstarter}}</p>
+						<p><strong>Profile_Updated_On: </strong>{{selectedDummyData.Profile_Updated_On}}</p>
 
-						<p><strong>{{x.Categories_of_Interest}}</td>
-
-						<td class="Country">{{x.Country}}</td>
-
-						<td class="Method_of_Contact">
-							<h5 ng-repeat="y in x.Method_of_Contact">{{y}}</h5>
-						</td>
-
-						<td class="Publisher_Website">{{x.Publisher_Website}}</td>
-
-						<td class="BoardGameGeek_Page">{{x.BoardGameGeek_Page}}</td>
-
-						<td class="Contact_Info">{{x.Contact_Info}}</td>
-
-						<td class="Planned_Use_of_Kickstarter">{{x.Planned_Use_of_Kickstarter}}</td>
-
-						<td class="Profile_Updated_On">{{x.Profile_Updated_On}}</td>
-				</div>
 
 				<div class="modal-footer">
 
@@ -252,16 +254,31 @@
 		// 	$scope.CEdataArray = temp;
 		// });
 
-	    $http.get("/api/data").then(function(response) {
 
-			response.data.Publisher_Data_Input_Form.forEach(function(x){
-				 console.log(typeof x.Categories_of_Interest);
-				 console.log(typeof x.Representative_Games);
+
+	    // $http.get("/api/data").then(function(response) {
+	    $http.get("/api/returnDB").then(function(response) {
+	    	// console.log(response);
+			response.data.forEach(function(x){
+				 // console.log(x);
+
+				 //sorting functions========================================================================
+
+				 // x.Categories_of_Interest = x.Categories_of_Interest.replace("[", "").replace("]", "").replace(/games/g, "").split(", ");
+				 // x.Representative_Games = x.Representative_Games.split("\n");
+				 // x.Method_of_Contact = x.Method_of_Contact.replace("[", "").replace("]", "").split(", ");
+
+				 // x.Publisher_Website = x.Publisher_Website.replace("<a href= \"", "").splice(, "");
+				 // console.log(x.Categories_of_Interest);
 			});
 
-			$scope.CEdataArray = response.data.Publisher_Data_Input_Form;
-			console.log($scope.CEdataArray);
-			$scope.MasterData = response.data.Publisher_Data_Input_Form;
+			$scope.CEdataArray = response;
+			
+
+			console.log("$scope.CEdataArray", $scope.CEdataArray);
+			$scope.MasterData = response;
+
+
 	    });
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -353,6 +370,8 @@
 
 		//very important search var
 		$scope.searchKeyWord = "";
+		$scope.searchKeyWord2 = "";
+		$scope.searchKeyWord3 = "";
 		$scope.sortOrder = null;
 		$scope.filterType = null;
 
@@ -401,68 +420,6 @@
 		console.log('sampleDataArray', $scope.sampleDataArray[0]);
 
 		// $scope.sampleData = CEDATA.Publisher_Data_Input_Form[0];
-
-		//dummy data/////////////////////////////////////////////////////////////////////////////////////
-		$scope.dummyData = [
-			{
-				Publisher: "CE", 
-				Games: ["Cobras", "Dubai", "Sultana"], 
-				DateCreated: "2011",
-				AcceptingSubmissions: true,
-				Dummy: '0',
-				pic: "https://i.imgur.com/vYMdCnD.jpg",
-				"a":0,
-				"b":1,
-				"c":2,
-				"d":3,
-				"e":4,
-				"f":5,
-				"g":6
-
-			},
-				{
-				Publisher: "ZMAN", 
-				Games: ["Bob", "Bill", "Bill2"], 
-				DateCreated: "2012",
-				AcceptingSubmissions: true,
-				pic:"https://i.imgur.com/bQDtnrx.jpg",
-				"a":0,
-				"b":1,
-				"c":2,
-				"d":3,
-				"e":4,
-				"f":5,
-				"g":6
-			},
-			{
-				Publisher: "Zitnis", 
-				Games: ["BH", "CP", "HUTS"], 
-				DateCreated: "2012",
-				AcceptingSubmissions: false,
-				pic: "https://i.imgur.com/bQDtnrx.jpg",
-				"a":0,
-				"b":1,
-				"c":2,
-				"d":3,
-				"e":4,
-				"f":5,
-				"g":6
-			},
-			{
-				Publisher: "Doug", 
-				Games: ["DDG", "UNPUB"], 
-				DateCreated: "1980",
-				AcceptingSubmissions: true,
-				pic:"https://i.imgur.com/bQDtnrx.jpg",
-				"a":"0",
-				"b":"1",
-				"c":"2",
-				"d":"3",
-				"e":"4",
-				"f":"5",
-				"g":"6"
-			}
-		];
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////
 
