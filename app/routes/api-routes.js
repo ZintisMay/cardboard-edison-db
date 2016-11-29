@@ -46,6 +46,9 @@ module.exports = function(app){
 		database: "gsw3abjc36mo6i91"
 	});
 
+	var a = 'gsw3abjc36mo6i91';
+	var b = 'PublisherDirectory';
+
 	connection.connect(function(err){
 		if(err){
 			console.log("error!", err.stack);
@@ -63,7 +66,7 @@ module.exports = function(app){
 		var temp= [];
 		connection.query("SELECT * FROM " + a + (b?".":"") + b, function(err, res){
 			if(err) throw err;
-			var timp = [];
+			// var timp = [];
 			// console.log(res[0]);
 			// console.log();
 			for(z=0;z<res.length;z++){
@@ -73,8 +76,8 @@ module.exports = function(app){
 			temp.push(res[z]);
 			console.log('done');
 			// console.log(temp);
-			timp = res;
-			console.log("timp", timp);
+			// timp = res;
+			// console.log("timp", timp);
 
 		});
 	}
@@ -126,8 +129,7 @@ module.exports = function(app){
 	app.get('/api/returnDB', function(req, res){
 		// res.json(showAll('gsw3abjc36mo6i91','PublisherDirectory'));
 		var res2 = res;
-		var a = 'gsw3abjc36mo6i91';
-		var b = 'PublisherDirectory';
+
 
 		console.log(("SELECT * FROM " + a + (b?".":"") + b));
 
@@ -137,6 +139,7 @@ module.exports = function(app){
 			if(err) throw err;
 
 			for(z=0;z<res.length;z++){
+				delete res.PubPassword;
 				console.log(res[z]);
 				temp.push(res[z]);	
 			}
@@ -152,6 +155,15 @@ module.exports = function(app){
 		console.log("req.body", req.body);
 		// pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
 		res.json({"You":"Did it!"});
+
+
+		var post = req.body;
+
+
+
+		connection.query("INSERT INTO " +a + (b?".":"") + b + " SET ?", post, function(err, result){
+			console.log(result);
+		});
 
 	});
 

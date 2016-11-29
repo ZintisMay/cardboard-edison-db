@@ -42,9 +42,19 @@
 	}
 
 	.removalButtons{
-		margin:3px;
-	}
+		margin:2px;
+		font-size:15;
+		float:left;
 
+
+	}
+	.titleButtons, .removalButtons{
+		border-style:solid;
+		border-width:2px;
+		border-color:black;
+
+	}
+		
 	.glyphicon-remove{
 		color:red;
 		cursor:pointer;
@@ -70,6 +80,48 @@
 	.bc-gray{
 		background-color: #eaeaea;
 	}
+	a{
+		word-break:break-all;
+	}
+	.titleDiv{
+		height:8%;
+	}
+	.loadingGIF{
+		width:10%;
+		position:absolute;
+		top:45%;
+		/*bottom:50%;*/
+		left:45%;
+		/*right:50%;*/
+	}
+	.bannerImage{
+		height:8%;
+		width:100%;
+		z-index: -1;
+		position:absolute;
+		background-size: cover;
+		background-image: url("banner.png");
+		opacity:.5;
+	}
+
+	.compendium{
+		vertical-align: center;
+		padding:0px;
+		margin:0px;
+		color:black;
+		font-family:times;
+		text-shadow: 1px 1px 0px black; /* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
+
+	}
+	.compendium, .compendiumInput{
+		float:left;
+	}
+	input{
+		margin:1%;
+		/*bottom:10%;*/
+		vertical-align:middle;
+
+	}
 	@media only screen and (min-width: 731px){
 		.rightAlign{
 			text-align:right
@@ -83,6 +135,9 @@
 		.rightAlign, .leftAlign{
 			text-align:center;
 		}
+		.bannerImage{
+		height:16%;
+		}
 	}
 	</style>
 
@@ -90,26 +145,38 @@
 </head>
 <!-- controller blinds certain code to this section of the DOM -->
 <body ng-controller="MainCTRL">
+<img src="loading.gif" class="loadingGIF" ng-if="loading">
+
+<div class="bannerImage"></div>
 
 	<div class="container-fluid">
 
 		<div class="row">
 
-			<button ng-click="" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button>
-
-			<button class="btn" ng-click="showMe(started)" ng-class="{'btn-primary': started, 'btn-danger': !started}">click</button>
-
-			<button ng-click="getJSON()" class="btn btn-primary">getJSON</button>
-
-			<button ng-click="pushJSON()" class="btn btn-primary">pushJSON</button>
-
-			<input ng-model="searchKeyWord" placeholder="Search Table..."></input>
-
-			<input ng-model="searchKeyWord2" placeholder="Search Table..."></input>
-
-			<input ng-model="searchKeyWord3" placeholder="Search Table..."></input>
 			
-			<button class="removalButtons btn btn-warning" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button>
+
+			<!-- <button ng-click="" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button> -->
+
+			<!-- <button class="btn" ng-click="showMe(started)" ng-class="{'btn-primary': started, 'btn-danger': !started}">click</button> -->
+
+			<!-- <button ng-click="getJSON()" class="btn btn-primary">getJSON</button> -->
+
+			<!-- <button ng-click="pushJSON()" class="btn btn-primary">pushJSON</button> -->
+
+			<!-- <button ng-click="dbGetData()" class="btn btn-primary">dbGetData</button> -->
+
+			<div class="col-sm-12 titleDiv">
+				<h1 class="compendium">The Compendium</h1>
+				<input class="compendiumInput" ng-model="searchKeyWord" placeholder="Search Table..."></input>
+							<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button>
+
+			</div>
+			
+
+			<!-- <input ng-model="searchKeyWord2" placeholder="Search Table..."></input> -->
+
+			<!-- <input ng-model="searchKeyWord3" placeholder="Search Table..."></input> -->
+
 
 		</div>	
 
@@ -352,28 +419,36 @@
 	    	console.log('$scope.localJSON', $scope.localJSON);
 	    });
 	    
+	    //deactivates the gif
+	    $scope.loading = true;
 	    //this will return all the db data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	    $http.get("/api/returnDB").then(function(response) {
-	    	// console.log(response);
-			response.data.forEach(function(x){
-				 // console.log(x);
+	    $scope.dbGetData = function(){
+	    	console.log("dbgetdata");
+		    $http.get("/api/returnDB").then(function(response) {
+		    	// console.log(response);
+				response.data.forEach(function(x){
+					 // console.log(x);
 
-				 //sorting functions========================================================================
+					 //sorting functions========================================================================
 
-				 // x.Categories_of_Interest = x.Categories_of_Interest.replace("[", "").replace("]", "").replace(/games/g, "").split(", ");
-				 // x.Representative_Games = x.Representative_Games.split("\n");
-				 // x.Method_of_Contact = x.Method_of_Contact.replace("[", "").replace("]", "").split(", ");
+					 // x.Categories_of_Interest = x.Categories_of_Interest.replace("[", "").replace("]", "").replace(/games/g, "").split(", ");
+					 // x.Representative_Games = x.Representative_Games.split("\n");
+					 // x.Method_of_Contact = x.Method_of_Contact.replace("[", "").replace("]", "").split(", ");
 
-				 // x.Publisher_Website = x.Publisher_Website.replace("<a href= \"", "").splice(, "");
-				 // console.log(x.Categories_of_Interest);
-			});
+					 // x.Publisher_Website = x.Publisher_Website.replace("<a href= \"", "").splice(, "");
+					 // console.log(x.Categories_of_Interest);
+	 				$scope.CEdataArray = response.data;
+					// removeKey(idPublisherDirectory);
+					console.log("$scope.CEdataArray", $scope.CEdataArray);
+					$scope.MasterData = $scope.CEdataArray;
+				});
+			$scope.loading = false;
+	 	   });
+	    }
+	    //IMMEDIATE CALL++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	    $scope.dbGetData();
 
-			$scope.CEdataArray = response.data;
-			// removeKey(idPublisherDirectory);
-			console.log("$scope.CEdataArray", $scope.CEdataArray);
-			$scope.MasterData = $scope.CEdataArray;
 
-	    });
 
 	    //this will dump all the data into mysql++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	    $scope.populateDBdata = [];
@@ -385,7 +460,8 @@
 	    $scope.getJSON = function(){
 		   $http.get("/api/data").then(function(response){
 	    		var tempResponse = response.data.Publisher_Data_Input_Form;
-	    		
+	    			var biggestRep = 0;
+	    			var biggestInt = 0;	    		
 	    		console.log($scope.populateDBdata);
 
 	    		tempResponse.forEach(function(x){
@@ -410,9 +486,9 @@
 
 	    			delete x.Contact_Info;
 
-	    			x.Country = x.Country;
+	    			// x.Country = x.Country;
 
-	    			delete x.Country;
+	    			// delete x.Country;
 
 	    			x.InterestedIn = x.Interested_In;
 
@@ -444,14 +520,21 @@
 
 	    			x.PubPassword = "Zintis11484"
 
+
+
 	    			Object.keys(x).forEach(function(key){
 	    				console.log(key);
 	    				if(x[key] === "" || x[key] == null){
 	    					x[key] = "BLANK";
 	    				}
+	    				if(x[key].length > 120){console.log(x[key].length, key,"+++++++++",  x[key]);}
+	    				if(key == "RepresentativeGames" && x[key].length > biggestRep){biggestRep = x[key].length;}
+    					if(key == "InterestedIn" && x[key].length > biggestInt){biggestInt = x[key].length;}
 	    			});
-
+	    			
 	    		});
+
+			console.log(biggestInt, biggestRep);
 
 	    		$scope.populateDBdata = tempResponse;
 	    		$scope.CEdataArray = tempResponse;
@@ -461,7 +544,7 @@
     	var JSONcounter = 0;
 	    $scope.pushJSON = function(){
 	    	// $scope.populateDBdata.length
-	    	if (JSONcounter == 2){ JSONcounter = 0; return false;}
+	    	if (JSONcounter == $scope.populateDBdata.length){ JSONcounter = 0; return false;}
 
 	        $http.post("/api/populateDB", $scope.populateDBdata[JSONcounter]).then(function(response){
 	        	console.log($scope.populateDBdata[JSONcounter]);
