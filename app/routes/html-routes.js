@@ -40,4 +40,8 @@ module.exports = function(app){
 		res.sendFile(path.join(__dirname + '/../public/Table3.html'));
 	});
 
+	app.get('/NewPublisher', function(req, res){
+		res.sendFile(path.join(__dirname + '/../public/NewPublisher.html'));
+	});
+
 }
