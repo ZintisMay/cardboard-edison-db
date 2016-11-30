@@ -264,9 +264,9 @@
 	</div>
 
 	<!-- Modal -->
-	<div id="myModal" class="modal fade" role="dialog">
+	<div id="myModal" class="modal fade" role="">
 
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -730,6 +730,25 @@
 		}
 		$scope.showMe = showMe;
 
+
+		//stick the top row of buttons
+
+		// function sticky_relocate() {
+		//     var window_top = $(window).scrollTop();
+		//     var div_top = $('#sticky-anchor').offset().top;
+		//     if (window_top > div_top) {
+		//         $('#sticky').addClass('stick');
+		//         $('#sticky-anchor').height($('#sticky').outerHeight());
+		//     } else {
+		//         $('#sticky').removeClass('stick');
+		//         $('#sticky-anchor').height(0);
+		//     }
+		// }
+
+		// $(function() {
+		//     $(window).scroll(sticky_relocate);
+		//     sticky_relocate();
+		// });
 
 	
 	});

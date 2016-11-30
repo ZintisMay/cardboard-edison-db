@@ -58,11 +58,87 @@ module.exports = function(app){
 			// pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
 		}
 	});
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	var monthNames = [
+	"Jan", 
+	"Feb", 
+	"Mar", 
+	"Apr", 
+	"May", 
+	"Jun",
+	"Jul", 
+	"Aug", 
+	"Sep", 
+	"Oct", 
+	"Nov", 
+	"Dec"
+	];
+
+	Date.prototype.yyyymmdd = function() {
+	  var mm = this.getMonth(); // getMonth() is zero-based
+	  var dd = this.getDate();
+
+	  return [
+	  			(mm>9 ? '' : '0') + monthNames[mm],
+	          	(dd>9 ? '-' : '-0') + dd,
+	         	"-" + this.getFullYear()
+	         ].join('');
+	};
+
+	// var date = new Date();
+	// console.log(date.yyyymmdd());
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	function checkPW(a, b, PublisherName, PubPassword){
+
+		queryString = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + PublisherName + "\" AND PubPassword = \"" + PubPassword + "\"";
+
+		console.log(queryString);
+
+		connection.query(queryString, function(err, res){
+			if(err) throw err;
+			console.log(res);
+			if(res.length == 1){
+				console.log("it's there");
+				console.log(res[0]);
+				return res[0];
+			}else if(res.lengt > 1){
+				console.log("multiple entries");
+				return res;
+			}
+			console.log("NOPE");
+			// return false;
+		});
+
+	}
+
+	function getSingle(a, b, PublisherName, PubPassword){
+
+		queryString = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + PublisherName + "\" AND PubPassword = \"" + PubPassword + "\"";
+		console.log("______________________________________________________________________________________________________");		
+
+		console.log(queryString);		
+
+		connection.query(queryString, function(err, res){
+			if(err) throw err;
+			console.log(res);
+			if(res){
+				console.log("it's there");
+				console.log(res);
+				return res;
+			}
+			console.log("NOPE");
+			// return null;
+		});
+
+	}
 
 	function showAll(a, b){
-		console.log(("SELECT * FROM " + a + (b?".":"") + b));
+		// console.log(("SELECT * FROM " + a + (b?".":"") + b));
 		var temp= [];
 		connection.query("SELECT * FROM " + a + (b?".":"") + b, function(err, res){
 			if(err) throw err;
@@ -101,7 +177,7 @@ module.exports = function(app){
 		return returnString;
 	}
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	// Search for Specific Character (or all characters) then provides JSON
 	app.get('/api/data', function(req, res){
@@ -138,7 +214,12 @@ module.exports = function(app){
 			if(err) throw err;
 
 			for(z=0;z<res.length;z++){
-				delete res[z].PubPassword;
+				if(res[z].Viewable == 0){
+					delete res[z];
+				}else{
+
+					delete res[z].PubPassword;	
+				}
 				console.log(res[z]);
 				temp.push(res[z]);	
 			}
@@ -164,6 +245,95 @@ module.exports = function(app){
 			console.log(result);
 		});
 
+	});
+
+	app.post('/api/checkPW', function(req, res){
+		console.log(req.body);
+		console.log(req.body.PublisherName);
+		console.log(req.body.PubPassword);
+
+		res = checkPW(a, b, req.body.PublisherName, req.body.PubPassword);
+	});
+
+	app.post('/api/getSingle', function(req, res){
+		
+		console.log(req.body);
+
+		var queryString = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + req.body.PublisherName + "\" AND PubPassword = \"" + req.body.PubPassword + "\"";	
+		
+		var res2 = res;
+
+		var temp = {};
+		
+		console.log(queryString);		
+
+		connection.query(queryString, function(err, res){
+			if(err) throw err;
+
+			console.log(res);
+
+			if(res.length == 0){
+				temp = {ERROR:"Incorrect Name or Password"};
+			}else{
+				temp = res[0];	
+			}
+			res2.json(temp);
+
+		});
+		
+	});
+
+	app.post('/api/updateSingle', function(req, res){
+		console.log("updateSingle");
+		console.log(req.body);
+
+		var passwordHolder = req.body.NewPassword;
+
+		delete req.body.NewPassword;
+
+		var tempString = "UPDATE " + a + (b?".":"") + b + " SET "
+		for(var key in req.body){
+
+			if(key == "PubPassword" && req.body.PubPassword != req.body.NewPassword && req.body.NewPassword != ""){
+
+				tempString += key;
+				tempString += "='";
+				tempString += req.body[key];
+				tempString += "', ";
+
+			}else if(key == "NewPassword"){
+
+			}else if(key == "RecentlyUpdated"){
+
+				var date = new Date();
+				tempString += key;
+				tempString += "='";
+				tempString += date.yyyymmdd();
+				tempString += "', ";
+
+			}else{
+
+				tempString += key;
+				tempString += "='";
+				tempString += req.body[key];
+				tempString += "', ";
+
+			}
+
+		}
+
+		queryString = tempString.slice(0, -2);
+
+		queryString+= " WHERE PublisherName = \"" + req.body.PublisherName + "\" AND PubPassword = \"" + req.body.PubPassword + "\"";	
+		
+		console.log(queryString);
+
+
+		connection.query(queryString, function(err, res){
+			if(err) throw err;
+			console.log(res);
+
+		})
 	});
 
 
