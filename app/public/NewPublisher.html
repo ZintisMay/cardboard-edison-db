@@ -33,39 +33,26 @@
 		position:relative;
 	}
 	.submitRow{
-
 		bottom:0;
-/*		left:25%;*/
 		position:fixed;
 		z-index:1000;
 	}
-/*	.submitButton{
-		width:80%;
-	}
-	.submitButton2{
-
-		width:20%;
-	}*/
 	.submitButton,.submitButton2{
 		height:100px;
 		width:100%;
 		margin:0px;
 	}
+	/*for the background*/
 	.lopacity{
 		opacity:.3;
 	}
+	/*fix a button*/
 	.retrieve{
 		margin:5px;
-	}
-	.col{
-		/*border-style:solid;*/
-		/*border-color:black;*/
-		/*border-radius: 3px;*/
 	}
 	.jumbotron{
 		text-align: center;
 		background-image: url("banner-transparent.png");
-		/*opacity:.5;*/
 	}
 	.jumbotron>h1{
 		color:white;
@@ -81,9 +68,15 @@
 		margin:5px;
 	}
 	.panel-default{
-		border-style:solid;
-		border-color:black;
-		border-width:3px;
+		border-color: #005580;
+	}
+	.panel-default{
+		/*border-style:solid;*/
+		/*border-color:black;*/
+		/*border-width:3px;*/
+	}
+	.panel-heading{
+		background-color:#0088cc ;
 	}
 	input{width:100%;}
 
@@ -109,10 +102,12 @@
 
 		<div class="row mainRow" style="">
 
+		<!-- //padding div -->
 			<div class="col col-md-2">
 
 			</div>
 
+		<!-- main body -->
 			<div class="col col-md-8 mainColumn">
 
 				<div class="jumbotron">
@@ -135,7 +130,7 @@
 				<div 
 				ng-repeat="(key, value) in CEdataObject" 
 				class="panel panel-default" 
-				ng-class="{'panel-danger':evaluateKey(key),'panel-warning':padLock.bool}" 
+				ng-class="{'panel-danger':evaluateKey(key)}" 
 				ng-if="evaluateData(key)"
 				>
 					
@@ -167,6 +162,7 @@
 			
 			</div>
 
+			<!-- padding div -->
 			<div class="col col-md-2">
 
 			</div>
@@ -180,13 +176,18 @@
 	<!-- //floating submit button -->
 	<div class="container submitRow">
 		<div class="row ">
+
 			<div class="col col-md-2"></div>
+
+			<!-- submit button -->
 			<div class="col col-md-6">
 				<button ng-click="submitNewEntry()" class="btn btn-primary submitButton" data-toggle="modal" data-target="#myModal" style=""><h1>Submit</h1></button>
 			</div>
+			<!-- unlock button -->
 			<div class="col col-md-2">
 				<button ng-click="padLock.toggle()" ng-class="{'btn-warning':padLock.bool, 'btn-danger':!padLock.bool}" class="btn submitButton2"><h3>Form Fields:<br>{{padLock.state}}</h3></button>
 			</div>
+
 			<div class="col col-md-2"></div>
 
 		</div>
@@ -201,7 +202,7 @@
 			<div class="modal-content">
 
 				<div class="modal-header">
-
+				<!-- x button -->
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4>Update Database:</h4>
 					<h2 class="modal-title">{{CEdataObject["PublisherName"]}}</h2>
@@ -210,6 +211,7 @@
 
 				<div class="modal-body">
 
+				<!-- list of items in push object -->
 					<ul ng-repeat="(key, value) in CEdataObject" ng-if="evaluateThis(key,['idPublisherDirectory','RecentlyUpdated','PublisherName'])">
 						<p><strong>{{key}}: </strong><span>{{value}}</span></p>
 					</ul>
@@ -218,6 +220,7 @@
 
 				<div class="modal-footer">
 
+					<!--  -->
 					<button type="button" class="btn btn-primary" data-dismiss="modal" style="float:left;" ng-click="submitUpdatedEntry(CEdataObject)">Submit?</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Exit</button>
 				</div>
@@ -261,7 +264,10 @@
 		
 	//initializes the module, and then controller
 	angular.module('CEINPUT', []).controller("MainCTRL", function($scope , $http){
-		
+		//super important empty object
+		$scope.CEdataObject = {};
+
+		//this locks the fields
 		$scope.padLock = {
 			state: "Locked",
 			bool: true,
@@ -275,11 +281,11 @@
 				}
 			}
 		}
-
-		$scope.lock = {
-			PubPassword:true,
-			PublisherName:true
-		};
+		//not sure if this is needed anymore
+				// $scope.lock = {
+				// 	PubPassword:true,
+				// 	PublisherName:true
+				// };
 
 		// $scope.unlock = function(){
 		// 	$scope.lock = !$scope.lock;
@@ -349,27 +355,29 @@
 
 	    	$http.post("/api/getSingle", PassObject).then(function(response) {
 
-	    		console.log(response);
+	    		console.log("response.data", response);
 
 	    		$scope.CEdataObject = response.data;
-	    		$scope.CEdataObject.NewPassword = "";
-	    		if($scope.CEdataObject == {}){
-	    			$scope.CEdataObject = {ERROR:"Incorrect Name or Password"}
+
+	    		if(!$scope.CEdataObject.ERROR){
+	    			console.log("NewPassword");
+		    		$scope.CEdataObject.NewPassword = "";
 	    		}
+
     		});
 		}
 
 		//update your entry++++++++++++++++++++++++++++++++++++++++
 		$scope.submitUpdatedEntry = function(PassObject){
-
+			console.log('bob');
 			$http.post("/api/updateSingle", PassObject).then(function(response){
-				$scope.getEntry(PassObject);
-			})
+				console.log(response);
+				console.log("$scope.getEntry(PassObject");
+				// $scope.getEntry(PassObject);
+			});
 		}
 
-		$scope.CEdataObject = {
 
-		}; 
 
 	    $scope.GetMyPub = function(nameAndPass){
 
