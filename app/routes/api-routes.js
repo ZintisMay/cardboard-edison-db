@@ -180,22 +180,22 @@ module.exports = function(app){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	// Search for Specific Character (or all characters) then provides JSON
-	app.get('/api/data', function(req, res){
-		console.log('data');
-		res.json(JSONdata);
+		app.get('/api/data', function(req, res){
+			console.log('data');
+			res.json(JSONdata);
 
-	});
+		});
 
 	// If a user sends data to add a new character...
-	app.post('/api/newEntry', function(req, res){
+			// app.post('/api/newEntry', function(req, res){
 
 
-		console.log(req.body);
-		console.log('newEntry');
-		pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
-		res.json({"You":"Did it!"});
+			// 	console.log(req.body);
+			// 	console.log('newEntry');
+			// 	pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
+			// 	res.json({"You":"Did it!"});
 
-	});
+			// });
 
 	// app.get('/api/returnDB', function(req, res){
 	// 	console.log('returnDB');
@@ -228,20 +228,48 @@ module.exports = function(app){
 		});
 	});
 
+	//zintis currently working on making this create new entries
+	//make sure you set the public view to 0
+	//make sure the data being passed works
+
+	app.post('/api/newPublisher', function(req, res){
+
+		res.json({"You":"Made a new Publisher!"});
+
+		var post = req.body;
+		var res2 = res;
+		var queryString = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + req.body.PublisherName + "\"";	
+
+		connection.query(queryString, function(err, result){
+			if(err) throw err;
+			if(result.length == 0){
+
+				connection.query("INSERT INTO " +a + (b?".":"") + b + " SET ?", post, function(err, result){
+					if(err) throw err;
+					console.log(result);
+				});
+
+			};
+		});
+
+
+
+	});
+
 	app.post('/api/populateDB', function(req, res){
-		console.log('populateDB');
+
+		// console.log('populateDB');
 
 		// console.log("req", req);
-		console.log("req.body", req.body);
+		// console.log("req.body", req.body);
 		// pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
 		res.json({"You":"Did it!"});
 
-
 		var post = req.body;
 
-
-
 		connection.query("INSERT INTO " +a + (b?".":"") + b + " SET ?", post, function(err, result){
+			if(err) throw err;
+
 			console.log(result);
 		});
 
@@ -278,12 +306,14 @@ module.exports = function(app){
 				temp = res[0];	
 			}
 			res2.json(temp);
+			console.log(temp);
 
 		});
 		
 	});
 
 	app.post('/api/updateSingle', function(req, res){
+
 		console.log("updateSingle");
 		console.log(req.body);
 
@@ -294,11 +324,11 @@ module.exports = function(app){
 		var tempString = "UPDATE " + a + (b?".":"") + b + " SET "
 		for(var key in req.body){
 
-			if(key == "PubPassword" && req.body.PubPassword != req.body.NewPassword && req.body.NewPassword != ""){
+			if(key == "PubPassword" && passwordHolder != ""){
 
 				tempString += key;
 				tempString += "='";
-				tempString += req.body[key];
+				tempString += passwordHolder;
 				tempString += "', ";
 
 			}else if(key == "NewPassword"){
@@ -328,12 +358,18 @@ module.exports = function(app){
 		
 		console.log(queryString);
 
-
+		var res1 = res;
+		var res2;
 		connection.query(queryString, function(err, res){
 			if(err) throw err;
 			console.log(res);
 
+		res2 = res;
+
 		})
+
+		res1;
+
 	});
 
 
