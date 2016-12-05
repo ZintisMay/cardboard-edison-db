@@ -25,7 +25,9 @@
 
 	<!-- //style -->
 	<style type="text/css">
-
+	.h3{
+		font-size:25px;
+	}
 	.container{
 		width:100%;
 	}
@@ -67,6 +69,9 @@
 	.jumbotron>input{
 		margin:5px;
 	}
+	.panel{
+		margin-bottom:3px;
+	}
 	.panel-default{
 		border-color: #005580;
 	}
@@ -77,6 +82,9 @@
 	}
 	.panel-heading{
 		background-color:#0088cc ;
+	}
+	.panel-body, .panel-heading{
+		margin-bottom:0px;
 	}
 	input{width:100%;}
 
@@ -136,20 +144,43 @@
 					
 					<div class="panel panel-heading" >
 
-						<h4>{{key}}</h4>
+						<p><span class="h3">{{key}}</span> {{formObject[key]}}</p>
 
 						<span ng-if="!evaluateThis(key,['Viewable', 'NewPassword','PubPassword','PublisherName'])">Locked Field. Enable with unlock button at bottom.</span>
+						
 
-						<p ng-if="!evaluateThis(key,'Viewable')">Set this value to 1 if you want your entry to be viewable in the compendium. Set it to 0 if you don't.</p>
 					<!-- 	<button type="button" class="btn btn-default btn-lg" ng-if="lockStock(key)"><span class="glyphicon glyphicon-lock" ng-click="lock.{{key}} = !lock.{{key}}" ></span></button> -->
 						
 					</div>
 
 					<div class="panel panel-body">
 						
-						<input ng-model="CEdataObject[key]" ng-disabled="!evaluateThis(key,'RecentlyUpdated')" ng-if="evaluateThis(key,['Viewable', 'NewPassword','PubPassword','PublisherName'])"></input>
+						<input ng-model="CEdataObject[key]" ng-disabled="" ng-if="evaluateThis(key,['Viewable', 'NewPassword','PubPassword','PublisherName', 'Kickstarter', 'RecentlyUpdated'])"></input>
 
-						<input ng-if="!evaluateThis(key,['Viewable', 'NewPassword','PubPassword','PublisherName'])" ng-model="CEdataObject[key]" ng-disabled="padLock.bool" ></input>
+						<input ng-if="!evaluateThis(key,['NewPassword','PubPassword','PublisherName'])" ng-model="CEdataObject[key]" ng-disabled="padLock.bool" ></input>
+
+						<input ng-if="!evaluateThis(key,'RecentlyUpdated')" ng-model="CEdataObject[key]" ng-disabled="padLock.bool" ></input>
+
+						<select name="KickstarterSelect" ng-if="!evaluateThis(key,'Kickstarter')" ng-model="CEdataObject[key]">
+							<option>{{CEdataObject[key]}}</option>
+							<option ng-repeat="x in selectObject[key]">{{x}}</option>
+						</select>
+
+<!-- 						<select name="CountrySelect" ng-if="!evaluateThis(key,'Country')" ng-model="CEdataObject[key]">
+							<option>{{CEdataObject[key]}}</option>
+							<option ng-options="x in selectObject.country_list">{{x}}</option>
+						</select> -->
+
+						<!-- attempt to automate the select -->
+						<!-- <select name="CountrySelect" ng-if="!evaluateThis(key,'Country')" ng-model="CEdataObject[key]" ng-options="x for x in selectObject.country_list"></select> -->
+
+						<select name="Viewable" ng-if="!evaluateThis(key,'Viewable')" ng-model="CEdataObject[key]">
+							<option value="0">No</option>
+							<option value="1">Yes</option>
+						</select>
+
+
+
 
 						<!-- <input ng-model="CEdataObject[key]" ng-disabled="lock.PublisherName" ng-if="isPublisherName(key)"></input> -->
 						<!-- <input ng-model="CEdataObject[key]" ng-disabled="lock.PubPassword" ng-if="isPubPassword(key)"></input> -->
@@ -291,6 +322,30 @@
 		// 	$scope.lock = !$scope.lock;
 		// 	console.log($scope.lock);
 		// }
+		$scope.formObject = {
+			PublisherName:"",
+			Website:"Your company site:",
+			BGGpage:"If you have a www.BoardGameGeek.com page, list it here:",
+			Country:'Where you distribute to:',
+			CatalogSize:"Number of games published:",
+			RepresentativeGames:"Some of your best:",
+			Kickstarter:"Do you plan on running them?",
+			Submissions:"Are you taking any?",
+			CategoriesOfInterest:"What broad game categories do you want to publish?",
+			InterestedIn:"What other game features do you want to publish?",
+			ContactMethod:"Email? Introduction? Submission form?",
+			ContactInfo:"",
+			RecentlyUpdated:"This field automatically updates when you submit.",
+			PubPassword:"This is your current password.",
+			Viewable:"Makes your entry viewable on the main page.",
+			NewPassword:"This will become your password if you enter anything here."
+		}
+
+		$scope.selectObject = {
+			Kickstarter: ['somtimes', 'always/frequently', 'rarely/never'],
+			country_list : ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"]
+
+		}
 
 		$scope.evaluateThis=function(a, b){
 			// console.log(typeof b);
@@ -349,7 +404,6 @@
 			PubPassword: "TEST"
 		}
 
-
 		//retrieve your name/pass account++++++++++++++++++++++++++++++++++++++++
 		$scope.getEntry = function(PassObject){
 
@@ -370,35 +424,29 @@
 		//update your entry++++++++++++++++++++++++++++++++++++++++
 		$scope.submitUpdatedEntry = function(PassObject){
 			console.log('bob');
+			var p2 = PassObject;
 			$http.post("/api/updateSingle", PassObject).then(function(response){
 				console.log(response);
 				console.log("$scope.getEntry(PassObject");
-				// $scope.getEntry(PassObject);
+				$scope.getEntry(p2);
+
 			});
 		}
 
-
-
-	    $scope.GetMyPub = function(nameAndPass){
-
-	    };
-
-		$scope.currentObject = {
-			"Publisher Name": "Cardboard Edison",
-			"Publisher Website": "cardboardedison.com",
-			"BoardGameGeek Page": "http://boardgamegeek.com/boardgamepublisher/33169/cardboard-edison",
-			"Country": "USA",
-			"Catalog Size": 1,
-			"Representative Games": "Cobras",
-			"Planned use of Kickstarter": "Always/Frequently",
-			"Accepting Submissions": "no",
-			"Categories of Interest": ["Dice", "Thematic", "Micro", "Board", "Gateway", "Card", "Family", "Social", "Euro"],
-			"Interested in": "Games with unique mechanics and themes",
-			"Contact Info": "cardboardedison@gmail.com",
-			"Profile Updated On": "12-Oct-2016"
-		};
-
-
+		// $scope.currentObject = {
+		// 	"Publisher Name": "Cardboard Edison",
+		// 	"Publisher Website": "cardboardedison.com",
+		// 	"BoardGameGeek Page": "http://boardgamegeek.com/boardgamepublisher/33169/cardboard-edison",
+		// 	"Country": "USA",
+		// 	"Catalog Size": 1,
+		// 	"Representative Games": "Cobras",
+		// 	"Planned use of Kickstarter": "Always/Frequently",
+		// 	"Accepting Submissions": "no",
+		// 	"Categories of Interest": ["Dice", "Thematic", "Micro", "Board", "Gateway", "Card", "Family", "Social", "Euro"],
+		// 	"Interested in": "Games with unique mechanics and themes",
+		// 	"Contact Info": "cardboardedison@gmail.com",
+		// 	"Profile Updated On": "12-Oct-2016"
+		// };
 
 	});
 

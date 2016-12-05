@@ -116,26 +116,26 @@ module.exports = function(app){
 
 	}
 
-	function getSingle(a, b, PublisherName, PubPassword){
+	// function getSingle(a, b, PublisherName, PubPassword){
 
-		queryString = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + PublisherName + "\" AND PubPassword = \"" + PubPassword + "\"";
-		console.log("______________________________________________________________________________________________________");		
+	// 	queryString = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + PublisherName + "\" AND PubPassword = \"" + PubPassword + "\"";
+	// 	console.log("______________________________________________________________________________________________________");		
 
-		console.log(queryString);		
+	// 	console.log(queryString);		
 
-		connection.query(queryString, function(err, res){
-			if(err) throw err;
-			console.log(res);
-			if(res){
-				console.log("it's there");
-				console.log(res);
-				return res;
-			}
-			console.log("NOPE");
-			// return null;
-		});
+	// 	connection.query(queryString, function(err, res){
+	// 		if(err) throw err;
+	// 		console.log(res);
+	// 		if(res){
+	// 			console.log("it's there");
+	// 			console.log(res);
+	// 			return res;
+	// 		}
+	// 		console.log("NOPE");
+	// 		// return null;
+	// 	});
 
-	}
+	// }
 
 	function showAll(a, b){
 		// console.log(("SELECT * FROM " + a + (b?".":"") + b));
