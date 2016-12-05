@@ -95,20 +95,16 @@
 		/*right:50%;*/
 	}
 	.bannerImage{
-		height:100%;
+		height:8%;
 		width:100%;
-		z-index: 2;
+		z-index: -1;
 		position:absolute;
 		background-size: cover;
 		background-image: url("banner.png");
-		/*opacity:1.0;*/
+		opacity:.5;
 	}
-	.bannerImage *{
-		z-index:3;
-	}
-	.compendium{
-		height:60px;
 
+	.compendium{
 		vertical-align: center;
 		padding:0px;
 		margin:0px;
@@ -119,21 +115,6 @@
 	}
 	.compendium, .compendiumInput{
 		float:left;
-	}
-	.compendiumInput{
-		height:40px;
-	}
-
-	.stickyTop{
-		top:0;
-		height:80px;
-		position:fixed;
-		z-index:1000;
-	}
-	.stickyTop * {
-		float:left;
-		padding:5px;
-		margin:5px;
 	}
 	input{
 		margin:1%;
@@ -159,7 +140,7 @@
 			text-align:center;
 		}
 		.bannerImage{
-		/*height:160px;*/
+		height:16%;
 		}
 	}
 	</style>
@@ -168,11 +149,15 @@
 </head>
 <!-- controller blinds certain code to this section of the DOM -->
 <body ng-controller="MainCTRL">
+<img src="loading.gif" class="loadingGIF" ng-if="loading">
 
-	<!-- loading image -->
-	<img src="loading.gif" class="loadingGIF" ng-if="loading">
+<div class="bannerImage"></div>
 
-	<div class="stickyTop bannerImage">
+	<div class="container-fluid">
+
+		<div class="row">
+
+			
 
 			<!-- <button ng-click="" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button> -->
 
@@ -184,29 +169,23 @@
 
 			<!-- <button ng-click="dbGetData()" class="btn btn-primary">dbGetData</button> -->
 
-				
-				<img class="compendium" src="GOLDcompendium.png">
-				
-				<input class="compendiumInput" ng-model="searchKeyWord.$" placeholder=
-				"Search Table..."></input>
-				
+			<div class="col-sm-12 titleDiv">
+				<h1 class="compendium">The Compendium</h1>
+				<input class="compendiumInput" ng-model="searchKeyWord" placeholder="Search Table..."></input>
 				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button>
 
-	</div>
+			</div>
 
-	<div class="container-fluid" style="margin-top:80px;">
+		</div>	
 
 		<div class="row">
 			
 			<table class="table table-inverse">
 
 				<thead>
-
 					<tr>
-
 						<td ng-repeat="(key, val) in CEdataArray[0]" class="{{key}}" ng-if="evaluateRemCol(key)">
 
-							<div>
 								<button class="btn titleButtons thickButton btn-block" ng-click="changeSortType(key); arrowObject.increment(key)">{{key}}
 
 									<span  
@@ -216,22 +195,20 @@
 									</span>
 
 								</button>
-							</div>
-							<div>
-								<input ng-model="searchKeyWord[key]" placeholder="Search" style="margin-right:5%;margin-left:5%;margin-top:5px;width:90%; height:20px;font-size:18px;text-align:center;">
 
-									<!-- <button class="btn btn-danger titleButtons thinButton btn-block" ng-click="removeThisColumn(key)">X</button> -->
-							</div>
+
+								<!-- <button class="btn btn-danger titleButtons thinButton btn-block" ng-click="removeThisColumn(key)">X</button> -->
 						</td>
-
 
 					</tr>
 				</thead>
 
 				<tbody>
-
-					<tr 
-					ng-repeat="x in CEdataArray | filter:searchKeyWord| orderBy:sortType:sortReverse" 
+ 
+					<tr ng-repeat="
+					x in CEdataArray | 
+					filter:searchKeyWord | 
+					orderBy:sortType:sortReverse" 
 					ng-click="assignModalData(CEdataArray.indexOf(x))" 
 					data-toggle="modal" 
 					data-target="#myModal" 
@@ -305,7 +282,7 @@
 				</div> -->
 
 				<div class="modal-body">
-					<ul ng-repeat="(key, val) in selectedDummyData " style="text-align:center;" ng-if = "evaluateThisKey(key, ['idPublisherDirectory', 'Viewable'])">
+					<ul ng-repeat="(key, val) in selectedDummyData " style="text-align:center;" ng-if = "evaluateIdPub(key)">
 						<div>
 							<div class="col-sm-4 sometimesCentered rightAlign" style=";">
 								<p><strong>{{key}}:</strong></p>
@@ -348,7 +325,6 @@
 	</div>
 
 
-
 	<script type="text/javascript">
 		
 	//initializes the module, and then controller
@@ -372,28 +348,13 @@
 			return colorToggle;
 		}
 
-
-
-		$scope.evaluateThisKey = function(a, b){
-			
-			if(typeof b == 'object'){
-
-				if(b.indexOf(a) == -1){
-					return true;
-				}else{
-					return false;
-				}
-
-			}else{
-				if(a == b ){
-					return false
-				}else{ 
-					return true;
-				}
+		$scope.evaluateIdPub = function(a){
+			if(a == "idPublisherDirectory" ){
+				return false
+			}else{ 
+				return true;
 			}
-
 		}
-
 		$scope.evaluateArray = function(a){
 			if(typeof a == "array"){
 				return true
@@ -690,7 +651,9 @@
 
 
 		//very important search var
-		$scope.searchKeyWord = {$:""};
+		$scope.searchKeyWord = "";
+		$scope.searchKeyWord2 = "";
+		$scope.searchKeyWord3 = "";
 		$scope.sortOrder = null;
 		$scope.filterType = null;
 
