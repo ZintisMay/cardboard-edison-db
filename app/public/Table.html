@@ -122,6 +122,7 @@
 	}
 	.compendiumInput{
 		height:40px;
+		margin:20px 0px 20px 0px;
 	}
 
 	.stickyTop{
@@ -145,6 +146,7 @@
 		margin:0px;
 		padding:0px;
 	}
+	
 	@media only screen and (min-width: 731px){
 		.rightAlign{
 			text-align:right
@@ -162,6 +164,7 @@
 		/*height:160px;*/
 		}
 	}
+
 	</style>
 
 
@@ -184,13 +187,35 @@
 
 			<!-- <button ng-click="dbGetData()" class="btn btn-primary">dbGetData</button> -->
 
+				<img src="CElogo.jpeg" height="70px" style="border-style:solid;border-width:1px;border-color:black;padding:0px;border-radius:50%;"></img>
 				
-				<img class="compendium" src="GOLDcompendium.png">
+				<!-- <img class="compendium" src="GOLDcompendium.png"> -->
+
+				<h1 style="color:orange;font-family:arial;
+				text-shadow:
+				-1px -1px 0 black,
+				1px -1px 0 black, 
+				-1px 1px 0 black, 
+				1px 1px 0 black;
+				font-size:40px;
+				padding:0px;
+				margin-top:20px;
+				margin-bottom:20px;
+				">The Compendium</h1>
+
+<!-- 				<div class="input-group">
+				  <input type="text" class="form-control" placeholder="Recipient's username" aria-describedby="basic-addon2" ng-model="searchKeyWord.$">
+				  <span class="input-group-addon" id="basic-addon2">Clear All</span>
+				</div> -->
+
+				<input style="height:40px;
+				margin-top:20px;
+				margin-bottom:20px;"
+				class="compendiumInput" 
+				ng-model="searchKeyWord.$" 
+				placeholder="Search Table..."></input>
 				
-				<input class="compendiumInput" ng-model="searchKeyWord.$" placeholder=
-				"Search Table..."></input>
-				
-				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button>
+<!-- 				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button> -->
 
 	</div>
 
@@ -484,15 +509,13 @@
 				}
 
 				$scope.loading = false;
-				console.log('MasterData', $scope.MasterData);
-				console.log('arrowObject', $scope.arrowObject);
+				// console.log('MasterData', $scope.MasterData);
+				// console.log('arrowObject', $scope.arrowObject);
 			});
 
 	    }
 	    //IMMEDIATE CALL++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	    $scope.dbGetData();
-
-
 
 	    //this will dump all the data into mysql++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	    $scope.populateDBdata = [];
