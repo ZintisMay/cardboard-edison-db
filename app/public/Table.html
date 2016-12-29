@@ -29,6 +29,7 @@
 	td{
 		padding:5px;
 		cursor:pointer;
+
 	}
 	table{
 		overflow:scroll;
@@ -136,6 +137,9 @@
 		padding:5px;
 		margin:5px;
 	}
+	.TAC{
+		text-align:center;
+	}
 	input{
 		margin:1%;
 		/*bottom:10%;*/
@@ -165,6 +169,10 @@
 		}
 	}
 
+	/*TESTING==================================================*/
+
+
+
 	</style>
 
 
@@ -191,7 +199,9 @@
 				
 				<!-- <img class="compendium" src="GOLDcompendium.png"> -->
 
-				<h1 style="color:orange;font-family:arial;
+				<h1 style="
+				color:orange;
+				font-family:arial;
 				text-shadow:
 				-1px -1px 0 black,
 				1px -1px 0 black, 
@@ -208,15 +218,25 @@
 				  <span class="input-group-addon" id="basic-addon2">Clear All</span>
 				</div> -->
 
-				<input style="height:40px;
+				<input style="
+				height:40px;
 				margin-top:20px;
 				margin-bottom:20px;"
 				class="compendiumInput" 
 				ng-model="searchKeyWord.$" 
 				placeholder="Search Table..."></input>
 
-				<div class="btn btn-danger" style="border-radius:50%;margin-top:20px;margin-bottom:20px;height:40px;" ng-click="clearSearchKeyWord()">Clear All</div>
-				
+				<div 
+				class="btn btn-danger" 
+				style="
+				border-radius:50%;
+				margin-top:20px;
+				margin-bottom:20px;
+				padding:10px;
+				/*height:40px;*/
+				" 
+				ng-click="clearSearchKeyWord()">Clear All</div>
+
 <!-- 				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button> -->
 
 	</div>
@@ -255,7 +275,7 @@
 					</tr>
 				</thead>
 
-				<tbody>
+				<tbody >
 
 					<tr 
 					ng-repeat="x in CEdataArray | filter:searchKeyWord| orderBy:sortType:sortReverse" 
@@ -264,11 +284,29 @@
 					data-target="#myModal" 
 					ng-class-even="'bc-gray'">
 
-						<td ng-repeat="(key, val) in x" ng-if="evaluateRemCol(key)">
-							<a ng-href="{{val}}" ng-if="evaluateHREF(val)">{{val}}</a>
-							<div ng-if="!evaluateHREF(val)">
-								<p ng-if="!evaluateArray(val)">{{val}}</p>
-								<!-- <ul ng-if="evaluateArray(val)" ng-repeat="k in val">{{k}}</ul> -->
+						<td 
+						ng-repeat="(key, val) in x" 
+						ng-if="evaluateRemCol(key)"
+						>
+							<div 
+							style="
+							height:40px;
+							overflow:hidden;
+							max-width: 300px;"
+							ng-class="classTypes[key]" 
+							>
+								<a ng-href="{{val}}" ng-if="evaluateHREF(val)">Link</a>
+								<div ng-if="!evaluateHREF(val)">
+									<p ng-if="!evaluateArray(val)" 
+									style="
+									max-width: 300px;
+									white-space: nowrap;
+									overflow:hidden;
+									text-overflow:ellipsis;
+									">{{val}}</p>
+
+									<!-- <ul ng-if="evaluateArray(val)" ng-repeat="k in val">{{k}}</ul> -->
+								</div>
 							</div>
 						</td>
 <!-- 
@@ -430,7 +468,8 @@
 		}
 
 		$scope.evaluateHREF = function(a){
-			var http = "http://";
+			var http = "http";
+
 			for(x=0;x<http.length;x++){
 				if(http[x] != a[x]){
 					return false;
@@ -462,6 +501,15 @@
 			}
 			
 		}
+
+		$scope.classTypes = {
+			"CatalogSize":"TAC",
+			"Submissions":"TAC",
+			"Country":"TAC",
+			"Website":"TAC",
+			"BGGpage":"TAC",
+			"RecentlyUpdated":"TAC"
+		};
 
 		// var CEDATA = {};
 
