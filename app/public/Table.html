@@ -29,6 +29,7 @@
 	td{
 		padding:5px;
 		cursor:pointer;
+
 	}
 	table{
 		overflow:scroll;
@@ -122,6 +123,7 @@
 	}
 	.compendiumInput{
 		height:40px;
+		margin:20px 0px 20px 0px;
 	}
 
 	.stickyTop{
@@ -135,6 +137,9 @@
 		padding:5px;
 		margin:5px;
 	}
+	.TAC{
+		text-align:center;
+	}
 	input{
 		margin:1%;
 		/*bottom:10%;*/
@@ -145,6 +150,7 @@
 		margin:0px;
 		padding:0px;
 	}
+	
 	@media only screen and (min-width: 731px){
 		.rightAlign{
 			text-align:right
@@ -162,6 +168,11 @@
 		/*height:160px;*/
 		}
 	}
+
+	/*TESTING==================================================*/
+
+
+
 	</style>
 
 
@@ -184,13 +195,49 @@
 
 			<!-- <button ng-click="dbGetData()" class="btn btn-primary">dbGetData</button> -->
 
+				<img src="CElogo.jpeg" height="70px" style="border-style:solid;border-width:1px;border-color:black;padding:0px;border-radius:50%;"></img>
 				
-				<img class="compendium" src="GOLDcompendium.png">
-				
-				<input class="compendiumInput" ng-model="searchKeyWord.$" placeholder=
-				"Search Table..."></input>
-				
-				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button>
+				<!-- <img class="compendium" src="GOLDcompendium.png"> -->
+
+				<h1 style="
+				color:orange;
+				font-family:arial;
+				text-shadow:
+				-1px -1px 0 black,
+				1px -1px 0 black, 
+				-1px 1px 0 black, 
+				1px 1px 0 black;
+				font-size:40px;
+				padding:0px;
+				margin-top:20px;
+				margin-bottom:20px;
+				">The Compendium</h1>
+
+<!-- 				<div class="input-group">
+				  <input type="text" class="form-control" placeholder="Recipient's username" aria-describedby="basic-addon2" ng-model="searchKeyWord.$">
+				  <span class="input-group-addon" id="basic-addon2">Clear All</span>
+				</div> -->
+
+				<input style="
+				height:40px;
+				margin-top:20px;
+				margin-bottom:20px;"
+				class="compendiumInput" 
+				ng-model="searchKeyWord.$" 
+				placeholder="Search Table..."></input>
+
+				<div 
+				class="btn btn-danger" 
+				style="
+				border-radius:50%;
+				margin-top:20px;
+				margin-bottom:20px;
+				padding:10px;
+				/*height:40px;*/
+				" 
+				ng-click="clearSearchKeyWord()">Clear All</div>
+
+<!-- 				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button> -->
 
 	</div>
 
@@ -228,7 +275,7 @@
 					</tr>
 				</thead>
 
-				<tbody>
+				<tbody >
 
 					<tr 
 					ng-repeat="x in CEdataArray | filter:searchKeyWord| orderBy:sortType:sortReverse" 
@@ -237,11 +284,29 @@
 					data-target="#myModal" 
 					ng-class-even="'bc-gray'">
 
-						<td ng-repeat="(key, val) in x" ng-if="evaluateRemCol(key)">
-							<a ng-href="{{val}}" ng-if="evaluateHREF(val)">{{val}}</a>
-							<div ng-if="!evaluateHREF(val)">
-								<p ng-if="!evaluateArray(val)">{{val}}</p>
-								<!-- <ul ng-if="evaluateArray(val)" ng-repeat="k in val">{{k}}</ul> -->
+						<td 
+						ng-repeat="(key, val) in x" 
+						ng-if="evaluateRemCol(key)"
+						>
+							<div 
+							style="
+							height:40px;
+							overflow:hidden;
+							max-width: 300px;"
+							ng-class="classTypes[key]" 
+							>
+								<a ng-href="{{val}}" ng-if="evaluateHREF(val)">Link</a>
+								<div ng-if="!evaluateHREF(val)">
+									<p ng-if="!evaluateArray(val)" 
+									style="
+									max-width: 300px;
+									white-space: nowrap;
+									overflow:hidden;
+									text-overflow:ellipsis;
+									">{{val}}</p>
+
+									<!-- <ul ng-if="evaluateArray(val)" ng-repeat="k in val">{{k}}</ul> -->
+								</div>
 							</div>
 						</td>
 <!-- 
@@ -403,7 +468,8 @@
 		}
 
 		$scope.evaluateHREF = function(a){
-			var http = "http://";
+			var http = "http";
+
 			for(x=0;x<http.length;x++){
 				if(http[x] != a[x]){
 					return false;
@@ -427,7 +493,23 @@
 		$scope.returnThisColumn = function(a){
 			$scope.removedColumns.splice($scope.removedColumns.indexOf(a), 1);
 			console.log($scope.removedColumns);
+		}		
+		$scope.clearSearchKeyWord = function(){
+			
+			for(x in $scope.searchKeyWord){
+				$scope.searchKeyWord[x] = "";
+			}
+			
 		}
+
+		$scope.classTypes = {
+			"CatalogSize":"TAC",
+			"Submissions":"TAC",
+			"Country":"TAC",
+			"Website":"TAC",
+			"BGGpage":"TAC",
+			"RecentlyUpdated":"TAC"
+		};
 
 		// var CEDATA = {};
 
@@ -484,15 +566,13 @@
 				}
 
 				$scope.loading = false;
-				console.log('MasterData', $scope.MasterData);
-				console.log('arrowObject', $scope.arrowObject);
+				// console.log('MasterData', $scope.MasterData);
+				// console.log('arrowObject', $scope.arrowObject);
 			});
 
 	    }
 	    //IMMEDIATE CALL++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	    $scope.dbGetData();
-
-
 
 	    //this will dump all the data into mysql++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	    $scope.populateDBdata = [];
