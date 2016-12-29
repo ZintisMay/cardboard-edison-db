@@ -479,7 +479,13 @@
 		}
 
 		$scope.evaluateRemCol = function(a){
-			if($scope.removedColumns.indexOf(a) == -1 && a != "idPublisherDirectory" && a != "Viewable"){
+			// if($scope.removedColumns.indexOf(a) == -1 && a != "idPublisherDirectory" && a != "Viewable" && a != "Website" && a != "BGGpage"){
+			// 	return true;
+			// }else{
+			// 	return false;
+			// }
+			var tempArray = ["idPublisherDirectory","Viewable","Website","BGGpage"];
+			if($scope.removedColumns.indexOf(a) == -1 && tempArray.indexOf(a) == -1){
 				return true;
 			}else{
 				return false;
