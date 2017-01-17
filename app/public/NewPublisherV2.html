@@ -94,6 +94,16 @@
 	.mainRow{
 		margin-bottom:80px
 	}
+	.categoryButtons{
+		width:100%;
+	}
+	.TArea{
+		width:100%;
+	}
+	.updateButton{
+		margin-top:10px;
+		width:100%;
+	}
 	@media only screen and (max-width: 900px) {
 		.mainRow{
 			margin-bottom:180px;
@@ -136,18 +146,37 @@
 				</div>
 
 				<div class="row">
-					<div class="col col-sm-4">
-						<div ng-repeat="(key, value) in CEdataObject" class="btn btn-primary" ng-click="show.setField(key)">{{key}}</div>
+
+					<div class="col col-sm-3">
+						<div  ng-repeat="(key, value) in CEdataObject" class="btn btn-primary categoryButtons" ng-if="evaluateThis(key,['idPublisherDirectory','RecentlyUpdated', 'Viewable'])" ng-click="show.setField(key)">{{key}}</div>
 					</div>
-					<div class="col col-sm-8">
+
+					<div class="col col-sm-9">
 						<h3>{{show.currentField}}</h3>
-						<p>{{CEdataobject[show.currentField]}}</p>
+						<h4>{{comment[show.currentField]}}</h4>
+						<textarea ng-if="CEdataObject.PublisherName" class="TArea"ng-model="CEdataObject[show.currentField]"></textarea>
+
+						<div class="row">
+							<div class="col col-sm-4" style="text-align: left;">						
+								<button ng-if="CEdataObject.PublisherName" ng-click="submitNewEntry()" class="btn btn-primary updateButton" data-toggle="modal" data-target="#myModal" style="">Review and Submit</button>
+							</div>
+							<div class="col col-sm-4" style="text-align: middle;">
+								<button ng-if="CEdataObject.PublisherName" ng-click="revertToOldEntry(show.currentField)" class="btn btn-warning updateButton"  >Revert Entry to Previous</button>
+						</div>
+							<div class="col col-sm-4" style="text-align: right;">						
+								<button ng-if="CEdataObject.PublisherName" ng-click="revertALL()" class="btn btn-danger updateButton">Revert All Changes</button>
+							</div>
+						</div>
+
+
+
+
 
 					</div>
 
 				</div>
 
-				<div 
+				<!-- <div 
 				ng-repeat="(key, value) in CEdataObject" 
 				class="panel panel-default" 
 				ng-class="{'panel-danger':evaluateKey(key)}" 
@@ -159,9 +188,6 @@
 						<p><span class="h3">{{key}}</span> {{formObject[key]}}</p>
 
 						<span ng-if="!evaluateThis(key,['Viewable', 'NewPassword','PubPassword','PublisherName'])">Locked Field. Enable with unlock button at bottom.</span>
-						
-
-					<!-- 	<button type="button" class="btn btn-default btn-lg" ng-if="lockStock(key)"><span class="glyphicon glyphicon-lock" ng-click="lock.{{key}} = !lock.{{key}}" ></span></button> -->
 						
 					</div>
 
@@ -178,34 +204,18 @@
 							<option ng-repeat="x in selectObject[key]">{{x}}</option>
 						</select>
 
-<!-- 						<select name="CountrySelect" ng-if="!evaluateThis(key,'Country')" ng-model="CEdataObject[key]">
-							<option>{{CEdataObject[key]}}</option>
-							<option ng-options="x in selectObject.country_list">{{x}}</option>
-						</select> -->
-
-						<!-- attempt to automate the select -->
-						<!-- <select name="CountrySelect" ng-if="!evaluateThis(key,'Country')" ng-model="CEdataObject[key]" ng-options="x for x in selectObject.country_list"></select> -->
-
 						<select name="Viewable" ng-if="!evaluateThis(key,'Viewable')" ng-model="CEdataObject[key]">
 							<option value="0">No</option>
 							<option value="1">Yes</option>
 						</select>
 
-
-
-
-						<!-- <input ng-model="CEdataObject[key]" ng-disabled="lock.PublisherName" ng-if="isPublisherName(key)"></input> -->
-						<!-- <input ng-model="CEdataObject[key]" ng-disabled="lock.PubPassword" ng-if="isPubPassword(key)"></input> -->
-						<!-- <div>{{value}}</div> -->
-
 					</div>
 
-				</div>
+				</div> -->
 				
 			
 			</div>
 
-			<!-- padding div -->
 			<div class="col col-md-2">
 
 			</div>
@@ -217,16 +227,14 @@
 	</div>
 
 	<!-- //floating submit button -->
-	<div class="container submitRow">
+<!-- 	<div class="container submitRow">
 		<div class="row ">
 
 			<div class="col col-md-2"></div>
 
-			<!-- submit button -->
 			<div class="col col-md-6">
 				<button ng-click="submitNewEntry()" class="btn btn-primary submitButton" data-toggle="modal" data-target="#myModal" style=""><h1>Submit</h1></button>
 			</div>
-			<!-- unlock button -->
 			<div class="col col-md-2">
 				<button ng-click="padLock.toggle()" ng-class="{'btn-warning':padLock.bool, 'btn-danger':!padLock.bool}" class="btn submitButton2"><h3>Form Fields:<br>{{padLock.state}}</h3></button>
 			</div>
@@ -234,7 +242,7 @@
 			<div class="col col-md-2"></div>
 
 		</div>
-	</div>
+	</div> -->
 
 	<!-- Modal -->
 	<div id="myModal" class="modal fade" role="dialog">
@@ -248,7 +256,7 @@
 				<!-- x button -->
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4>Update Database:</h4>
-					<h2 class="modal-title">{{CEdataObject["PublisherName"]}}</h2>
+					<h4 class="modal-title">{{CEdataObject["PublisherName"]}}</h4>
 
 				</div>
 
@@ -264,8 +272,10 @@
 				<div class="modal-footer">
 
 					<!--  -->
-					<button type="button" class="btn btn-primary" data-dismiss="modal" style="float:left;" ng-click="submitUpdatedEntry(CEdataObject)">Submit?</button>
-					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Exit</button>
+
+					<button type="button" class="btn btn-primary" data-dismiss="modal" style="float:left;" ng-click="submitUpdatedEntry(CEdataObject)">Click Here</button>
+					<h6 style="float:left; margin-left: 5px;"> To Permanently Change Your Entry</h6>
+					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Close Window</button>
 				</div>
 
 			</div>
@@ -310,11 +320,45 @@
 		//super important empty object
 		$scope.CEdataObject = {};
 
+		$scope.CEdataObjectBackUp = {};
+
+		$scope.revertToOldEntry = function(x){
+			console.log(x,$scope.CEdataObject[x], $scope.CEdataObjectBackUp[x] );
+			$scope.CEdataObject[x] = $scope.CEdataObjectBackUp[x];
+		}
+
+		$scope.revertALL = function(){
+			for(key in $scope.CEdataObjectBackUp){
+				$scope.CEdataObject[key] = $scope.CEdataObjectBackUp[key];
+			}
+			
+		}
+
 		$scope.show={
 			currentField: "",
 			setField: function(x){
+				console.log(x);
 				$scope.show.currentField = x;
+				console.log($scope.CEdataobject)
 			}
+		}
+
+		$scope.comment = {
+			PublisherName:"This is your company name, how users will find you.",
+			Website:"Put a dedicated website here.",
+			BGGpage:"Put your BoardGameGeek page here.",
+			Country:"Countries that you operate out of or distribute to. ",
+			CatalogSize:"Approximately how many games you have published. ",
+			RepresentativeGames:"What games in your catalog best represent what you are looking for?",
+			Kickstarter:"Will you be running Kickstarters in the future? Yes/No/Maybe",
+			Submissions:"Are you accepting new submissions?",
+			CategoriesOfInterest:"What broad games categories are you most interested in?",
+			InterestedIn:"Write a little more about what you are interested in, here.",
+			ContactMethod:"Best methods for interested designers to contact you.",
+			ContactInfo:"Contact link, email address, submissions page, etc...",
+			PubPassword:"This is the current password.",
+			NewPassword:"If you want to enter a new password, enter it here. Be sure to remember it!"
+
 		}
 
 		//this locks the fields
@@ -431,6 +475,10 @@
 	    		console.log("response.data", response);
 
 	    		$scope.CEdataObject = response.data;
+
+	    		for(key in $scope.CEdataObject){
+	    			$scope.CEdataObjectBackUp[key] = $scope.CEdataObject[key];
+	    		}
 
 	    		if(!$scope.CEdataObject.ERROR){
 	    			console.log("NewPassword");
