@@ -16,6 +16,15 @@ module.exports = function(app){
 		res.sendFile(path.join(__dirname + '/../public/index.html'));
 	});
 
+	app.post('/passCheckTable', function(req, res){
+		console.log(req.body);
+		if(req.body.userInput == "Designer16"){
+			console.log('string');
+			var tempObject = {ready:"go"}
+			res.send(tempObject);
+		}
+	});
+
 	app.get('/CEangularTable', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/CEangularTable.html'));
 	});
