@@ -52,8 +52,8 @@ module.exports = function(app){
 	app.get('/NewPublisher', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/NewPublisher.html'));
 	});
-	app.get('/NewPublisherv2', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/NewPublisherv2.html'));
+	app.get('/PublisherEditor', function(req, res){
+		res.sendFile(path.join(__dirname + '/../public/PublisherEditor.html'));
 	});
 
 }
