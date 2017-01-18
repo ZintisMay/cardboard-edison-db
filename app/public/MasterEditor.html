@@ -52,21 +52,21 @@
 	.retrieve{
 		margin:5px;
 	}
-	.jumbotron{
+	.jumbotron.j2{
 		text-align: center;
 		background-image: url("banner-transparent.png");
 	}
-	.jumbotron>h1{
+	.jumbotron.j2>h1{
 		color:white;
 		text-shadow: 3px 3px 0px black;
 	}
-	.jumbotron>a{
+	.jumbotron.j2>a{
 		/*color:#33FFFF;*/
 		text-shadow: 1px 1px 0px black;
 		text-decoration:underline;
 		font-size:20px;
 	}
-	.jumbotron>input{
+	.jumbotron.j2>input{
 		margin:5px;
 	}
 	.panel{
@@ -107,6 +107,27 @@
 	.btn-default:active{
 		background-color: red;
 	}
+	.titleName{
+		position:absolute;
+		bottom:0px;
+		width:20%;
+		left:40%;
+	}
+	.noMargin{
+		margin:0px;
+	}
+	.centerAlign{
+		text-align: center;
+	}
+	.titleRow{
+		margin: 2px 1px 2px 1px;
+	}
+	.titleButton{
+		width:100%;
+	}
+	.pubBtn{
+		width:100%;
+	}
 	@media only screen and (max-width: 900px) {
 		.mainRow{
 			margin-bottom:180px;
@@ -124,28 +145,56 @@
 		<div class="row mainRow" style="">
 
 		<!-- //padding div -->
-			<div class="col col-md-2">
+			<div class="col col-md-2" >
+				<div 
+				data-toggle="modal" 
+				data-target="#myModal2"
+				>
+					<image 
+					src="CElogo.jpeg"
+					height="70px" 
+					style="border-style:solid;border-width:1px;border-color:black;padding:0px;border-radius:50%;">
+					<span>Click to Login</span>
+				</div>
+
+				<div style="overflow-y:scroll;height:973px;">
+
+					<div 
+						class="btn pubBtn" 
+						ng-class="classCheck(pub.PublisherName, CEdataObject.PublisherName)" 
+						ng-repeat="pub in allPublishers | orderBy:'PublisherName'" 
+						ng-click="selectThisPub(pub)">
+						{{pub.PublisherName}}
+					</div>
+
+				</div>
 
 			</div>
 
 		<!-- main body -->
 			<div class="col col-md-8 mainColumn">
 
-				<div class="jumbotron">
+				<div class="jumbotron j2 noMargin">
 
 					<h1>Publisher Form</h1>
 
 					<input ng-model="nameAndPass.PublisherName" placeholder="Enter Publisher Name..."></input>
+
 					<input ng-model="nameAndPass.PubPassword" placeholder="Enter Publisher Password..."></input>
 
-						<button ng-click="getEntry(nameAndPass)" class="btn btn-primary retrieve">Retrieve Publisher Account</button>
+					<button ng-click="getEntry(nameAndPass)" class="btn btn-primary retrieve">Retrieve Publisher Account</button>
 
-						<a href="mailto:cardboardedison@gmail.com" target="_top">Problem? Contact CardBoard Edison!</a>
-						<!-- {{nameAndPass}} -->
+					<a href="mailto:cardboardedison@gmail.com" target="_top">Problem? Contact CardBoard Edison!</a>
+					<!-- {{nameAndPass}} -->
 
 
-
+					
 					<!-- <button ng-click="submitNewEntry()" class="btn btn-primary submit" data-toggle="modal" data-target="#myModal">SUBMIT</button> -->
+				</div>
+
+				<div class="row centerAlign titleRow">
+					<div class="btn btn-default titleButton"><h2 class="noMargin ">Currently Editing: <span>{{CEdataObject.PublisherName}}</span></h2>
+					</div>
 				</div>
 
 				<div class="row">
@@ -157,14 +206,13 @@
 
 						class="btn categoryButtons btn-default" 
 
-
-
-						ng-if="evaluateThis(key,['idPublisherDirectory','RecentlyUpdated', 'Viewable'])" 
+						ng-if="evaluateThis(key,['idPublisherDirectory','RecentlyUpdated'])" 
 
 						ng-click="show.setField(key)">{{key}}</div>
 					</div>
 
 					<div class="col col-sm-9">
+						
 						<h3>{{show.currentField}}</h3>
 						<h4>{{comment[show.currentField]}}</h4>
 						<textarea ng-if="CEdataObject.PublisherName" class="TArea"ng-model="CEdataObject[show.currentField]"></textarea>
@@ -244,6 +292,38 @@
 
 	</div>
 
+	<div id="myModal2" class="modal fade" role="dialog">
+
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+
+				<div class="modal-header">
+			
+				<h1>Master Login</h1>
+
+				</div>
+
+				<div class="modal-body">
+
+				<h3>Password:</h3>
+
+				<input ng-model="auth.userInput">
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" style="float:left;" ng-click="auth.check()">Login</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Close</button>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
 	<!-- {console.log($scope.bookmarks)} -->
 
 	<script type="text/javascript">
@@ -254,6 +334,23 @@
 		$scope.CEdataObject = {};
 
 		$scope.CEdataObjectBackUp = {};
+
+		$scope.classCheck = function(x, y){
+			if(x == y){
+				return "btn-primary";
+			}else{
+				return "btn-default";
+			}
+		}
+
+		$scope.selectThisPub = function(x){
+			$scope.CEdataObject = x;
+    		for(key in $scope.CEdataObject){
+    			$scope.CEdataObjectBackUp[key] = $scope.CEdataObject[key];
+    		}
+		}
+
+		$scope.currentPublisher = {};
 
 		$scope.revertToOldEntry = function(x){
 			console.log(x,$scope.CEdataObject[x], $scope.CEdataObjectBackUp[x] );
@@ -274,6 +371,34 @@
 				$scope.show.currentField = x;
 				console.log($scope.CEdataobject)
 			}
+		}
+
+		$scope.auth={
+			userInput: "Iamnotababysitter",
+			check: function(){
+				console.log('check');
+			    $http.post("/passCheckMaster", $scope.auth).then(function(response) {
+			    	console.log(response.data);
+			    	if(response.data.ready == "go"){
+			    		getAllPubs();
+			    	}
+	    		});
+			}
+		}
+
+		$scope.allPublishers = [];
+
+		function getAllPubs(){
+
+		    $http.post("/api/returnMasterDB", $scope.auth).then(function(response) {
+
+		    	console.log(response);
+
+	 			$scope.allPublishers = response.data;
+
+
+
+			});
 		}
 
 		$scope.comment = {

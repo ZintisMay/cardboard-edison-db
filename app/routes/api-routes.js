@@ -228,6 +228,27 @@ module.exports = function(app){
 		});
 	});
 
+	app.post('/api/returnMasterDB', function(req, res){
+		// res.json(showAll('gsw3abjc36mo6i91','PublisherDirectory'));
+		var res2 = res;
+
+		console.log("returnMasterDB");
+		console.log(("SELECT * FROM " + a + (b?".":"") + b));
+
+		var temp= [];
+
+		connection.query("SELECT * FROM " + a + (b?".":"") + b, function(err, res){
+			if(err) throw err;
+
+			for(z=0;z<res.length;z++){
+				console.log(res[z]);
+				temp.push(res[z]);	
+			}
+
+			res2.json(temp);
+		});
+	});
+
 	//zintis currently working on making this create new entries
 	//make sure you set the public view to 0
 	//make sure the data being passed works
