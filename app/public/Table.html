@@ -87,14 +87,25 @@
 	.titleDiv{
 		height:8%;
 	}
-	.loadingGIF{
-		width:10%;
+	.loadingGIF, .loadingMSG{
+
 		position:absolute;
-		top:45%;
+		
 		/*bottom:50%;*/
-		left:45%;
+
 
 		/*right:50%;*/
+	}
+	.loadingGIF{
+		left:45%;
+		top:45%;		
+		width:10%;
+	}
+	.loadingMSG{
+		top:35%;		
+		width:20%;
+		left:40%;
+		text-align:center;
 	}
 	.invisible{
 		visibility:hidden;
@@ -192,7 +203,7 @@
 <body ng-controller="MainCTRL">
 
 	<!-- loading image -->
-
+	<div src="loading.gif" class="loadingMSG invisible" ng-class="{visible:auth.loadingGIF}"><h2>Compiling Publishers...</h2></div>
 	<img src="loading.gif" class="loadingGIF invisible" ng-class="{visible:auth.loadingGIF}">
 
 	<div class="container-fluid" ng-if="!auth.beforePass" style="margin-top:200px;width:500px">

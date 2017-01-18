@@ -16,6 +16,7 @@ module.exports = function(app){
 		res.sendFile(path.join(__dirname + '/../public/index.html'));
 	});
 
+	// table password check
 	app.post('/passCheckTable', function(req, res){
 		console.log(req.body);
 		if(req.body.userInput == "Designer16"){
@@ -24,6 +25,16 @@ module.exports = function(app){
 			res.send(tempObject);
 		}
 	});
+
+	//master password check
+	app.post('/passCheckMaster', function(req, res){
+		console.log(req.body);
+		if(req.body.userInput == "Iamnotababysitter"){
+			console.log('string');
+			var tempObject = {ready:"go"}
+			res.send(tempObject);
+		}
+	})
 
 	app.get('/CEangularTable', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/CEangularTable.html'));
@@ -54,6 +65,9 @@ module.exports = function(app){
 	});
 	app.get('/PublisherEditor', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/PublisherEditor.html'));
+	});
+	app.get('/MasterEditor', function(req, res){
+		res.sendFile(path.join(__dirname + '/../public/MasterEditor.html'));
 	});
 
 }
