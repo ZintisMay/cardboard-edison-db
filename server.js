@@ -34,9 +34,6 @@ require("./app/routes/html-routes.js")(app)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-
-
-
 // var JSONdata = require("./DATA.json");
 
 // console.log(JSONdata);

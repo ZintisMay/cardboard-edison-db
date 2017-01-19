@@ -36,36 +36,38 @@ module.exports = function(app){
 		}
 	})
 
-	app.get('/CEangularTable', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/CEangularTable.html'));
-	});
+	// app.get('/CEangularTable', function(req, res){
+	// 	res.sendFile(path.join(__dirname + '/../public/CEangularTable.html'));
+	// });
 
-	app.get('/jsontest', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/jsontest.html'));
-	});
+	// app.get('/jsontest', function(req, res){
+	// 	res.sendFile(path.join(__dirname + '/../public/jsontest.html'));
+	// });
 
-	app.get('/CEangularNewCompany', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/CEangularNewCompany.html'));
-	});
+	// app.get('/CEangularNewCompany', function(req, res){
+	// 	res.sendFile(path.join(__dirname + '/../public/CEangularNewCompany.html'));
+	// });
 
 	app.get('/Table', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/Table.html'));
 	});
 
-	app.get('/Table2', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/Table2.html'));
-	});
+	// app.get('/Table2', function(req, res){
+	// 	res.sendFile(path.join(__dirname + '/../public/Table2.html'));
+	// });
 
-	app.get('/Table3', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/Table3.html'));
-	});
+	// app.get('/Table3', function(req, res){
+	// 	res.sendFile(path.join(__dirname + '/../public/Table3.html'));
+	// });
 
-	app.get('/NewPublisher', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/NewPublisher.html'));
-	});
+	// app.get('/NewPublisher', function(req, res){
+	// 	res.sendFile(path.join(__dirname + '/../public/NewPublisher.html'));
+	// });
+
 	app.get('/PublisherEditor', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/PublisherEditor.html'));
 	});
+	
 	app.get('/MasterEditor', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/MasterEditor.html'));
 	});

@@ -146,7 +146,7 @@ module.exports = function(app){
 			// console.log(res[0]);
 			// console.log();
 			for(z=0;z<res.length;z++){
-				console.log(res[z]);
+				// console.log(res[z]);
 				temp.push(res[z]);	
 			}
 			temp.push(res[z]);
@@ -255,25 +255,39 @@ module.exports = function(app){
 
 	app.post('/api/newPublisher', function(req, res){
 
-		res.json({"You":"Made a new Publisher!"});
+		console.log("you made a new publisher");
+
+		console.log(req.body);
 
 		var post = req.body;
-		var res2 = res;
-		var queryString = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + req.body.PublisherName + "\"";	
+		post.PubPassword = req.body.PublisherName;
 
-		connection.query(queryString, function(err, result){
-			if(err) throw err;
-			if(result.length == 0){
+		console.log(post);
 
-				connection.query("INSERT INTO " +a + (b?".":"") + b + " SET ?", post, function(err, result){
-					if(err) throw err;
-					console.log(result);
-				});
+		var queryString1 = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + req.body.PublisherName + "\"";	
 
-			};
-		});
+		//check to make sure there was something entered
+		if(typeof req.body.PublisherName == "string"){
+			//check to see if it exists
+			connection.query(queryString1, function(err, result){
+				if(err) throw err;
 
+				//if there are no duplicates, then:
+				if(result.length == 0){
 
+					var queryString2 = "INSERT INTO " + a + (b?".":"") + b + " SET PublisherName = \"" + req.body.PublisherName + "\"";	
+
+					//create a new entry
+					connection.query("INSERT INTO " +a + (b?".":"") + b + " SET ?", post, function(err, result){
+						if(err) throw err;
+						console.log(result);
+						var tempObject2 = {ready:"go"}
+						res.json(tempObject2);
+					});
+
+				};
+			});
+		}
 
 	});
 
@@ -291,15 +305,15 @@ module.exports = function(app){
 		connection.query("INSERT INTO " +a + (b?".":"") + b + " SET ?", post, function(err, result){
 			if(err) throw err;
 
-			console.log(result);
+			// console.log(result);
 		});
 
 	});
 
 	app.post('/api/checkPW', function(req, res){
-		console.log(req.body);
-		console.log(req.body.PublisherName);
-		console.log(req.body.PubPassword);
+		// console.log(req.body);
+		// console.log(req.body.PublisherName);
+		// console.log(req.body.PubPassword);
 
 		res = checkPW(a, b, req.body.PublisherName, req.body.PubPassword);
 	});
@@ -314,12 +328,12 @@ module.exports = function(app){
 
 		var temp = {};
 		
-		console.log(queryString);		
+		// console.log(queryString);		
 
 		connection.query(queryString, function(err, res){
 			if(err) throw err;
 
-			console.log(res);
+			// console.log(res);
 
 			if(res.length == 0){
 				temp = {ERROR:"Incorrect Name or Password"};
@@ -327,7 +341,7 @@ module.exports = function(app){
 				temp = res[0];	
 			}
 			res2.json(temp);
-			console.log(temp);
+			// console.log(temp);
 
 		});
 		
@@ -338,15 +352,18 @@ module.exports = function(app){
 		console.log("updateSingle");
 		console.log(req.body);
 
+		//store "newpassword", remove from object
 		var passwordHolder = req.body.NewPassword;
-
 		delete req.body.NewPassword;
 
+		//query beginning
 		var tempString = "UPDATE " + a + (b?".":"") + b + " SET "
+
+		//query middle, for each key val pair
 		for(var key in req.body){
 
+			//if there's a new password, update the query string
 			if(key == "PubPassword" && passwordHolder != ""){
-
 				tempString += key;
 				tempString += "='";
 				tempString += passwordHolder;
@@ -354,6 +371,7 @@ module.exports = function(app){
 
 			}else if(key == "NewPassword"){
 
+			//update the recentlyupdated field, to today
 			}else if(key == "RecentlyUpdated"){
 
 				var date = new Date();
@@ -362,36 +380,49 @@ module.exports = function(app){
 				tempString += date.yyyymmdd();
 				tempString += "', ";
 
+			//this catches all other fields, and makes key = val pairs
 			}else{
 
 				tempString += key;
 				tempString += "='";
 				tempString += req.body[key];
 				tempString += "', ";
-
 			}
-
 		}
 
+		//this modifies the end of the string? I think?
 		queryString = tempString.slice(0, -2);
 
+		//query end, to identify what is updated
 		queryString+= " WHERE PublisherName = \"" + req.body.PublisherName + "\" AND PubPassword = \"" + req.body.PubPassword + "\"";	
-		
-		console.log(queryString);
 
+		
 		var res1 = res;
+
 		var res2;
+
 		connection.query(queryString, function(err, res){
 			if(err) throw err;
 			console.log(res);
 
-		res2 = res;
+			res2 = res;
 
 		})
 
-		res1;
+			res1;
 
 	});
 
+	app.post('/api/deletePublisher', function(req, res){
+
+		var queryString1 = "DELETE FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + req.body.PublisherName + "\"";	
+
+		connection.query(queryString1, function(err, res2){
+			if(err) throw err;
+
+			res.json(res2)
+
+		});
+	});
 
 }

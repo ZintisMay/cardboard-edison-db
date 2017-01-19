@@ -289,14 +289,14 @@
 			InterestedIn:"Write a little more about what you are interested in, here.",
 			ContactMethod:"Best methods for interested designers to contact you.",
 			ContactInfo:"Contact link, email address, submissions page, etc...",
-			PubPassword:"This is the current password.",
+			PubPassword:"This is the current password. Changes made here change the password.",
 			NewPassword:"If you want to enter a new password, enter it here. Be sure to remember it!"
 
 		}
 
 		$scope.evaluateThis=function(a, b){
-			console.log(typeof b);
-			console.log(b);
+			// console.log(typeof b);
+			// console.log(b);
 			if(typeof b == 'object' && b.indexOf(a) >=0){
 					return false;
 			}else{
@@ -305,22 +305,6 @@
 				}
 			}
 			return true;
-		}
-
-		$scope.evaluateData = function(a){
-			if(a == "idPublisherDirectory" ){
-				return false
-			}else{ 
-				return true;
-			}
-		}
-
-		$scope.evaluateKey = function(a){
-			if(a == "PublisherName" || a == "PubPassword" || a == "NewPassword" || a == "Viewable"){
-				return true
-			}else{ 
-				return false;
-			}
 		}
 
 		$scope.isPublisherName = function(a){
@@ -365,10 +349,12 @@
 	    			$scope.CEdataObjectBackUp[key] = $scope.CEdataObject[key];
 	    		}
 
-	    		if(!$scope.CEdataObject.ERROR){
-	    			console.log("NewPassword");
-		    		$scope.CEdataObject.NewPassword = "";
-	    		}
+	    		//I think this makes the newpassword field
+
+	    		// if(!$scope.CEdataObject.ERROR){
+	    		// 	console.log("NewPassword");
+		    	// 	$scope.CEdataObject.NewPassword = "";
+	    		// }
 
     		});
 		}
